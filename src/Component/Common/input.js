@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({ type, placeholder, label }) => {
+const Input = ({ type, placeholder, label, onChange,name }) => {
   return (
     <>
       <div>
@@ -8,6 +8,8 @@ const Input = ({ type, placeholder, label }) => {
         <div>
           <input
             type={type}
+            name={name}
+            onChange={onChange}
             className="bg-white pl-4 w-full text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
             placeholder={placeholder}
           />
