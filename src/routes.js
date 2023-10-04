@@ -1,5 +1,5 @@
 import React from 'react';
-import Landing from './Component/Pages/landing';
+// import Landing from './Component/Pages/landing';
 import Login from './Component/Login/login';
 import Register from './Component/Register/register';
 import Page404 from './Component/Pages/page404';
@@ -14,7 +14,7 @@ const routes = [
        children: [
          { index: true, element: <Login /> },
          { path: 'register', element: <Register /> },
-         { path: 'Landing', element: <Landing /> },
+        //  { path: 'Landing', element: <Landing /> },
          { path: '*', element: <Page404 /> },
        ]
      },
@@ -23,7 +23,7 @@ const routes = [
        element: <Layout />,
        children: [
          { index: true, path:'/dashboard', element: <Dashboard /> },
-         { path: 'extensions', element: <Extensions /> },
+         { path: '/extensions', element: <Extensions /> },
        ]
      }
    ]
