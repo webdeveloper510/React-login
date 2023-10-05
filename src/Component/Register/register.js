@@ -1,6 +1,5 @@
 import React from "react";
 import Input from "../Common/input";
-import logins from "../../assets/image/img-01.webp"
 import { Link } from "react-router-dom";
 
 function Register() {
@@ -23,6 +22,10 @@ function Register() {
                   <button type="button" className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]">Sign Up</button>
               </div>
             </form>
+            <div className="mt-8 flex justify-center">
+              <p>Already have any account?</p>
+              <Link to='/' className="text-[#57b846] ml-3">Sign In</Link>
+             </div>
           </div>
         </div>
       </div>

@@ -35,10 +35,10 @@ function Login() {
     }
   };
   return (
-    <div className=" bg-gradient-to-r from-[#c850c0] to-[#4158d0] h-[100vh] pt-12">
+    <div className=" bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full  pt-12">
       <div className="grid grid-cols-12 gap-8 w-[960px] mx-auto bg-[#fff] p-10 rounded-lg">
         <div className="col-span-12 md:col-span-6">
-          <img src={logins} alt="login page" className="mx-auto my-12" />
+          <img src='http://zp04.kerne.org/webpanel/static/media/img-01.4ed7df3a303c99050d13.webp' alt="login page" className="mx-auto my-12" />
         </div>
         <div className="col-span-12 md:col-span-6">
           <div className=" mx-auto p-8">
@@ -74,6 +74,10 @@ function Login() {
                 </button>
               </div>
             </form>
+             <div className="mt-8 flex">
+              <p>Don’t have any account?</p>
+              <Link to='/register' className="text-[#57b846] ml-3">Sign Up</Link>
+             </div>
           
           </div>
         </div>

@@ -13,7 +13,7 @@ const routes = [
        path: '/',
        children: [
          { index: true, element: <Login /> },
-         { path: 'register', element: <Register /> },
+         { path: '/register', element: <Register /> },
         //  { path: 'Landing', element: <Landing /> },
          { path: '*', element: <Page404 /> },
        ]
