@@ -101,9 +101,9 @@ function SideBar() {
 
   return (
     <div className="">
-      <div className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] h-[100vh]">
+      <div className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full">
         <img src={Logo} className='mx-auto py-4' alt='logo'/>
-        <div className="shadow-sm h-[93vh]">
+        <div className="shadow-sm min-h-[93vh] h-full">
           <div className="w-[280px] mx-auto pt-8">
             <ul>
               {Lists.map((bar, index) => (

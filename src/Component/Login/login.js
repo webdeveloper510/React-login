@@ -36,7 +36,7 @@ function Login() {
   };
   return (
     <div className=" bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full  pt-12">
-      <div className="grid grid-cols-12 gap-8 w-[960px] mx-auto bg-[#fff] p-10 rounded-lg">
+      <div className="grid grid-cols-12 gap-8 w-[960px] mx-auto bg-[#fff] p-6 rounded-lg">
         <div className="col-span-12 md:col-span-6">
           <img src='http://zp04.kerne.org/webpanel/static/media/img-01.4ed7df3a303c99050d13.webp' alt="login page" className="mx-auto my-12" />
         </div>
