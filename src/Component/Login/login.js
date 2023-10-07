@@ -10,7 +10,9 @@ import { toast } from "react-toastify";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
   const navigate = useNavigate ();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +26,9 @@ function Login() {
       if (response.data.status == 'OK' ) {
         // Successful login
         toast.success(response.data.message);
-        navigate('/dashboard');
+        setToken(response.data.token)
+         localStorage.setItem('token', response.data.token );
+        navigate('/dashboard', { token: response.data.token });
       } else {
         // Handle login failure
         toast.error(response.data.message);

@@ -1,39 +1,48 @@
 import  axios  from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
+import { MdDelete } from "@react-icons/all-files/md/MdDelete";
+import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
+import Modal from "../Common/modal";
+import Input from "../Common/input";
 
 function Dashboard() {
   const [data, setData] = useState([]);
+  const token = localStorage.getItem('token');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
   console.log('Store data =======>>> ',data)
-
-  const fetchList = async () => {
-   let res =  await axios.get(`http://v01.kerne.org:500/pbx/pbx001/webapi/?module=${'dialprofile'}&action=${'list'}`).then(res=>{
-    return res
-   })
-   return res
-  }
   const fetchData = async () => {
 
     try {
     
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=apiLogin&username=webapi&password=2j9k4p5t7q`;
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=user&action=list&token=${token}`;
 
     await axios.get(apiUrl).then(res=>{
-      if(res.status === 200){
-        fetchList().then(res=>{
+       setData(res.data.user.list)
+      //  let columns = (res.data.user.list)
           console.log(res)
-        })
-      }
     })
     } catch (error) {
       console.error("Error:", error);
     }
   };
  
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
       <div className="p-4 bg-gradient-to-r from-[#c850c0] to-[#4158d0]">
@@ -43,42 +52,61 @@ function Dashboard() {
         </Link>
       </div>
 
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <button onClick={closeModal} className="absolute right-1 top-1">
+          <AiOutlineCloseCircle className="w-8 h-8"/>
+        </button>
+        <h2 className="text-2xl">Progress Edit</h2>
+        <hr className="my-2"/>
+        <form>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label={'hello'} type='text' />
+            <Input label={'hello'} type='text' />
+            <Input label={'hello'} type='text' />
+            <Input label={'hello'} type='text' />
+            <Input label={'hello'} type='text' />
+            <Input label={'hello'} type='text' />
+            <Input label={'hello'} type='text' />
+          </div>
+        </form>
+        
+      </Modal>
+
+
       <div className="pl-8">
           <p className="py-4 text-3xl font-semibold">Call In Progress</p>
-
-          {/* <ul>
-        {data.map((item, index) => (
-          <li key={index}>{item.dialprofile}</li>
-        ))}
-      </ul> */}
-        <div>
-          <table className="table-auto">
+        <div className="w-full overflow-x-auto">
+          <table className="table-auto ">
             <thead>
               <tr>
-                <th className="px-4 py-2">Title</th>
-                <th className="px-4 py-2">Author</th>
-                <th className="px-4 py-2">Views</th>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Queue</th>
+                <th className="px-4 py-2">Is Direct Allowed</th>
+                <th className="px-4 py-2">Has Voicemail</th>
+                <th className="px-4 py-2">Caller Id</th>
+                <th className="px-4 py-2">Dt Updated</th>
+                <th className="px-4 py-2">Is Fax</th>
+                <th className="px-4 py-2">Action</th>
               </tr>
             </thead>
             <tbody>
+            {Object.values(data).map((item) => (
               <tr>
-                <td className="border px-4 py-2">Intro to CSS</td>
-                <td className="border px-4 py-2">Adam</td>
-                <td className="border px-4 py-2">858</td>
-              </tr>
-              <tr className="bg-gray-100">
+                <td className="border px-4 py-2">{item.name}</td>
+                <td className="border px-4 py-2">{item.queue}</td>
+                <td className="border px-4 py-2">{item.isDirectAllowed}</td>
+                <td className="border px-4 py-2">{item.hasVoicemail}</td>
+                <td className="border px-4 py-2">{item.callerid}</td>
+                <td className="border px-4 py-2">{item.dtUpdated}</td>
+                <td className="border px-4 py-2">{item.isFax}</td>
                 <td className="border px-4 py-2">
-                  A Long and Winding Tour of the History of UI Frameworks and
-                  Tools and the Impact on Design
+                  <button  onClick={openModal}> <FaEdit className="w-5 h-5"/> </button>
+                  <button> <MdDelete className="w-5 h-5" /> </button>
                 </td>
-                <td className="border px-4 py-2">Adam</td>
-                <td className="border px-4 py-2">112</td>
               </tr>
-              <tr>
-                <td className="border px-4 py-2">Intro to JavaScript</td>
-                <td className="border px-4 py-2">Chris</td>
-                <td className="border px-4 py-2">1,280</td>
-              </tr>
+              ))}
+             
             </tbody>
           </table>
         </div>
