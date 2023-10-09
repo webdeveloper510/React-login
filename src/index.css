@@ -12,6 +12,16 @@ code {
     monospace;
 }
 
+.sc-dmyDmy.fEnJOm.rdt_TableHeadRow {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.bg-gradient-to-r.from-\[\#c850c0\].to-\[\#4158d0\].min-h-\[100vh\].h-full {
+  position: fixed;
+  width: 25%;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

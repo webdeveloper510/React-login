@@ -3,9 +3,16 @@ import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Logo from '../../assets/image/logo.png'
+import Dashboard from '../Pages/dashboard';
+import Extensions from '../Pages/extensions';
+import Queues from '../Pages/queues';
+import Routess from '../Pages/routess';
+import Monitoring from '../Pages/monitoring';
+import Call from '../Pages/call';
+import Parameters from '../Pages/parameters';
 
 
-function SideBar() {
+function SideBar({handler, data}) {
   const [active, setActive] = useState('');
   const [expandedItem, setExpandedItem] = useState(null); // Store the expanded main object
   const location = useLocation();
@@ -37,6 +44,7 @@ function SideBar() {
     {
       name: 'Home ',
       url: '/dashboard',
+      component: <Dashboard/>
     },
     {
       name: 'Administration',
@@ -44,20 +52,24 @@ function SideBar() {
         {
           name: 'Extensions',
           url: '/extensions',
+          component: <Extensions/>
         },
         {
           name: 'Queues',
           url: '/Queues',
+          component: <Queues/>
         },
         {
           name: 'Routes',
           url: '/Routes',
+          component: <Routess/>
         },
       ],
     },
     {
       name: 'Monitoring ',
       url: '/Monitoring ',
+      component: <Monitoring/>
     },
     {
       name: 'Reports',
@@ -65,6 +77,7 @@ function SideBar() {
         {
           name: 'Call Detail Records',
           url: '/call',
+          component: <Call/>
         },
       ],
     },
@@ -74,10 +87,13 @@ function SideBar() {
         {
           name: 'Parameters',
           url: '/Parameters',
+          component: <Parameters/>
         },
       ],
     },
   ];
+
+  // console.log(Lists)
 
   useEffect(() => {
     // Find the active URL and set it in the state
@@ -99,8 +115,12 @@ function SideBar() {
     );
   };
 
+  const handleTab = (name , component) => {
+    handler({label:name, content:component})
+  }
+
   return (
-    <div className="">
+    <div className="h-full">
       <div className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full">
         <img src={Logo} className='mx-auto py-4' alt='logo'/>
         <div className="shadow-sm min-h-[93vh] h-full">
@@ -110,12 +130,14 @@ function SideBar() {
                 <li key={index}>
                   <Link
                     to={bar.url}
+
                     className={`flex cursor-pointer rounded-[25px] p-1 mb-3 ${
                       active === bar.url || active === bar.name
                         ? 'bg-[#FFF] text-[#000]'
                         : ' text-white'
                     }`}
                     onClick={() => {
+                      handleTab(bar.name,bar.component)
                       toggleItem(bar.name);
                       handleClick(bar.url || bar.name);
                     }}
@@ -136,7 +158,8 @@ function SideBar() {
                                 ? 'bg-[#FFF] text-[#000]'
                                 : ' text-white'
                             }`}
-                            onClick={() => handleClick(item.url)}
+                            onClick={() => { handleClick(item.url)
+                              handleTab(item.name,item.component)}}
                           >
                             <span className="self-center text-left w-full pl-12">
                               {item.name}
