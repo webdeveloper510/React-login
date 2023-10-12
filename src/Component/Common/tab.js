@@ -51,15 +51,20 @@ const Tabs = ({ data, activeTab, setActiveTab, handler }) => {
                 } flex-1 text-center p-4 cursor-pointer  max-w-[200px] relative`}
                 onClick={() => setActiveTab(index)}
               >
-                <div className="absolute right-[-12px] top-[-12px]  z-[999]">
-                  <IoIosCloseCircle
-                    className="w-6 h-6 text-[#c850c0] bg-[#fff] rounded-[50%]"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent the tab click event from firing
-                      handleTabClose(index);
-                    }}
-                  />
-                </div>
+                {data.length == 1 ? (
+                  <></>
+                ) : (
+                  <div className="absolute right-[-12px] top-[-12px]  z-[999]">
+                    <IoIosCloseCircle
+                      className="w-6 h-6 text-[#c850c0] bg-[#fff] rounded-[50%]"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the tab click event from firing
+                        handleTabClose(index);
+                      }}
+                    />
+                  </div>
+                )}
+
                 {tab.label}
               </li>
             ))}
