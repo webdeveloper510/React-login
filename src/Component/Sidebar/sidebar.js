@@ -44,7 +44,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
 
   const Lists = [
     {
-      name: "Home ",
+      name: "Home",
       url: "/dashboard",
       component: <Dashboard />,
     },
@@ -69,8 +69,8 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       ],
     },
     {
-      name: "Monitoring ",
-      url: "/Monitoring ",
+      name: "Monitoring",
+      url: "/Monitoring",
       component: <Monitoring />,
     },
     {
@@ -117,12 +117,12 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
     );
   };
 
-  const handleTab = (name, component) => {
-    if (component !== undefined) {
+  const handleTab = (item) => {
+    if (item.component !== undefined) {
       let does_exist = null;
       let currentIndex = tabs.length;
       for (let i = 0; i < tabs.length; i++) {
-        if (tabs[i].label === name) {
+        if (tabs[i].label === item.name) {
           does_exist = true;
           currentIndex = i;
         }
@@ -131,8 +131,9 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
         setTabs([
           ...tabs,
           {
-            label: name,
-            content: component,
+            label: item.name,
+            content: item.component,
+            url: item.url,
           },
         ]);
       }
@@ -157,7 +158,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
                         : " text-white"
                     }`}
                     onClick={() => {
-                      handleTab(bar.name, bar.component);
+                      handleTab(bar);
                       toggleItem(bar.name);
                       handleClick(bar.url || bar.name);
                     }}
@@ -180,7 +181,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
                             }`}
                             onClick={() => {
                               handleClick(item.url);
-                              handleTab(item.name, item.component);
+                              handleTab(item);
                             }}
                           >
                             <span className="self-center text-left w-full pl-12">

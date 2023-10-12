@@ -9,6 +9,7 @@ function Layout() {
     {
       label: 'Home',
       content : <Dashboard/>,
+      url:"/dashboard"
     }])
   const [currentTab, setCurrentTab] = useState(0);
   

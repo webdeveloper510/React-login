@@ -37,37 +37,37 @@ function Dashboard() {
     {
       name: 'Name',
       selector: 'name',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Queue',
       selector: 'queue',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Is Direct Allowed',
       selector: 'isDirectAllowed',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Has Voicemail',
       selector: 'hasVoicemail',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Caller Id',
       selector: 'callerid',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Dt Updated',
       selector: 'dtUpdated',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Is Fax',
       selector: 'isFax',
-      sortable: true
+      sortable: true,
     },
     {
       name: 'Action',
