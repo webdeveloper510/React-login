@@ -77,7 +77,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       name: "Reports",
       items: [
         {
-          name: "Call Detail Records",
+          name: "Call Detail",
           url: "/call",
           component: <Call />,
         },

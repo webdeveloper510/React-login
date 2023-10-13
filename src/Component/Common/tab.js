@@ -47,14 +47,14 @@ const Tabs = ({ data, activeTab, setActiveTab, handler }) => {
                 className={`${
                   activeTab === index
                     ? "bg-gradient-to-r from-[#c850c0] to-[#4158d0] text-white"
-                    : "text-blue-500 hover:bg-blue-100 "
-                } flex-1 text-center p-4 cursor-pointer  max-w-[200px] relative`}
+                    : "text-blue-500 hover:bg-blue-100 border-2 border-[#c850c0]"
+                } flex-1 text-center p-4 cursor-pointer  max-w-[200px] relative mx-1 rounded-lg`}
                 onClick={() => setActiveTab(index)}
               >
                 {data.length == 1 ? (
                   <></>
                 ) : (
-                  <div className="absolute right-[-12px] top-[-12px]  z-[999]">
+                  <div className="absolute right-[2px] top-[2px]  z-[999]">
                     <IoIosCloseCircle
                       className="w-6 h-6 text-[#c850c0] bg-[#fff] rounded-[50%]"
                       onClick={(e) => {

@@ -10,8 +10,8 @@ import DataTable from "react-data-table-component";
 
 function Dashboard() {
   const [data, setData] = useState([]);
-  const [list, setList] = useState([])
-  const token = localStorage.getItem('token');
+  const [list, setList] = useState([]);
+  const token = localStorage.getItem("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -27,7 +27,7 @@ function Dashboard() {
       const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=user&action=list&token=${token}`;
       const response = await axios.get(apiUrl);
       setData(response.data.user.list);
-      setList(response.data.user.list)
+      setList(response.data.user.list);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -35,65 +35,73 @@ function Dashboard() {
 
   const columns = [
     {
-      name: 'Name',
-      selector: 'name',
+      name: "Name",
+      selector: (row) => row.name,
       sortable: true,
     },
     {
-      name: 'Queue',
-      selector: 'queue',
+      name: "Queue",
+      selector: (row) => row.queue,
       sortable: true,
     },
     {
-      name: 'Is Direct Allowed',
-      selector: 'isDirectAllowed',
+      name: "Is Direct Allowed",
+      selector: (row) => row.isDirectAllowed,
       sortable: true,
     },
     {
-      name: 'Has Voicemail',
-      selector: 'hasVoicemail',
+      name: "Has Voicemail",
+      selector: (row) => row.hasVoicemail,
       sortable: true,
     },
     {
-      name: 'Caller Id',
-      selector: 'callerid',
+      name: "Caller Id",
+      selector: (row) => row.callerid,
       sortable: true,
     },
     {
-      name: 'Dt Updated',
-      selector: 'dtUpdated',
+      name: "Dt Updated",
+      selector: (row) => row.dtUpdated,
       sortable: true,
     },
     {
-      name: 'Is Fax',
-      selector: 'isFax',
+      name: "Is Fax",
+      selector: (row) => row.isFax,
       sortable: true,
     },
     {
-      name: 'Action',
+      name: "Action",
       cell: (row) => (
         <div>
-          <button onClick={openModal}> <FaEdit className="w-5 h-5"/> </button>
-          <button> <MdDelete className="w-5 h-5" /> </button>
+          <button>
+            {/* <button onClick={openModal}> */}
+            <FaEdit className="w-5 h-5" />{" "}
+          </button>
+          <button>
+            {" "}
+            <MdDelete className="w-5 h-5" />{" "}
+          </button>
         </div>
       ),
     },
   ];
 
-
-function handleFilter(e) {
-  if (e.target.value.length > 0) {
-    const filterValue = e.target.value.toLowerCase();
-    const filteredData = Object.values(data).filter((row) =>
-      columns.some((column) =>
-        (row[column.selector] || "").toString().toLowerCase().includes(filterValue)
-      )
-    );
-    setData(filteredData);
-  } else {
-    setData(list);
+  function handleFilter(e) {
+    if (e.target.value.length > 0) {
+      const filterValue = e.target.value.toLowerCase();
+      const filteredData = Object.values(data).filter((row) =>
+        columns.some((column) =>
+          (row[column.selector] || "")
+            .toString()
+            .toLowerCase()
+            .includes(filterValue)
+        )
+      );
+      setData(filteredData);
+    } else {
+      setData(list);
+    }
   }
-}
 
   useEffect(() => {
     fetchData();
@@ -107,44 +115,64 @@ function handleFilter(e) {
         </Link>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      {/* <Modal isOpen={isModalOpen} onClose={closeModal}>
         <button onClick={closeModal} className="absolute right-1 top-1">
-          <AiOutlineCloseCircle className="w-8 h-8"/>
+          <AiOutlineCloseCircle className="w-8 h-8" />
         </button>
         <h2 className="text-2xl">Progress Edit</h2>
-        <hr className="my-2"/>
+        <hr className="my-2" />
         <form>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <Input label={'Name'} type='text' placeholder='Enter Name' />
+              <Input label={"Name"} type="text" placeholder="Enter Name" />
             </div>
-            <Input label={'Queue'} type='text' placeholder='Enter Queue'  />
-            <Input label={'Is Direct Allowed'} type='text' placeholder='Enter Is Direct Allowed'  />
-            <Input label={'Has Voicemail'} type='text' placeholder='Enter Has Voicemail'  />
-            <Input label={'Caller Id'} type='text' placeholder='Enter Caller Id'  />
-            <Input label={'Dt Updated'} type='text' placeholder='Enter Dt Updated'  />
-            <Input label={'Is Fax'} type='text' placeholder='Enter Is Fax'  />
-           
+            <Input label={"Queue"} type="text" placeholder="Enter Queue" />
+            <Input
+              label={"Is Direct Allowed"}
+              type="text"
+              placeholder="Enter Is Direct Allowed"
+            />
+            <Input
+              label={"Has Voicemail"}
+              type="text"
+              placeholder="Enter Has Voicemail"
+            />
+            <Input
+              label={"Caller Id"}
+              type="text"
+              placeholder="Enter Caller Id"
+            />
+            <Input
+              label={"Dt Updated"}
+              type="text"
+              placeholder="Enter Dt Updated"
+            />
+            <Input label={"Is Fax"} type="text" placeholder="Enter Is Fax" />
           </div>
           <div className="text-center">
-            <button type="submit" className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]">Update</button>
+            <button
+              type="submit"
+              className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
+            >
+              Update
+            </button>
           </div>
         </form>
-      </Modal>
+      </Modal> */}
 
       <div className="pl-8">
         <p className="py-4 text-3xl font-semibold">Call In Progress</p>
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-8"></div>
           <div className="col-span-4">
-            <Input type='search' placeholder='Search ....' onChange={handleFilter}/>
+            <Input
+              type="search"
+              placeholder="Search ...."
+              onChange={handleFilter}
+            />
           </div>
         </div>
-        <DataTable
-          columns={columns}
-          data={Object.values(data)}
-          pagination
-        />
+        <DataTable columns={columns} data={Object.values(data)} pagination />
       </div>
     </div>
   );
