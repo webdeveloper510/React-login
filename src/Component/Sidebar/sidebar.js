@@ -13,9 +13,8 @@ import Parameters from "../Pages/parameters";
 
 function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
   const [active, setActive] = useState("");
-  const [expandedItem, setExpandedItem] = useState(null); // Store the expanded main object
+  const [expandedItem, setExpandedItem] = useState(null); 
   const location = useLocation();
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -28,13 +27,13 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       );
 
       if (response.ok) {
-        setIsLoggedOut(true);
         toast.success("User is logged out!");
         console.log(response);
-        navigate("/");
-        // You can also perform any other actions here upon successful logout
+        localStorage.clear();
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000); 
       } else {
-        // Handle errors if the logout request was not successful
         console.error("Logout failed");
       }
     } catch (error) {

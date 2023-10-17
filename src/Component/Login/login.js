@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Common/input";
 import logins from "../../assets/image/img-01.webp";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
@@ -11,38 +11,45 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
-  const navigate = useNavigate ();
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Construct the API URL with query parameters
       const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=apiLogin&username=${username}&password=${password}`;
 
-      // Send a GET request to the API using Axios
       const response = await axios.get(apiUrl);
-      if (response.data.status == 'OK' ) {
-        // Successful login
+      if (response.data.status == "OK") {
         toast.success(response.data.message);
-        setToken(response.data.token)
-         localStorage.setItem('token', response.data.token );
-        navigate('/dashboard', { token: response.data.token });
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+        setTimeout(() => {
+          navigate("/dashboard", { token: response.data.token });
+        }, 3000);
       } else {
-        // Handle login failure
         toast.error(response.data.message);
       }
     } catch (error) {
-      // Handle network or other errors
       console.error("Error:", error);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/dasboard");
+    }
+  }, []);
+
   return (
     <div className=" bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full  pt-12">
       <div className="grid grid-cols-12 gap-8 w-[960px] mx-auto bg-[#fff] p-6 rounded-lg">
         <div className="col-span-12 md:col-span-6">
-          <img src='http://zp04.kerne.org/webpanel/static/media/img-01.4ed7df3a303c99050d13.webp' alt="login page" className="mx-auto my-12" />
+          <img
+            src="http://zp04.kerne.org/webpanel/static/media/img-01.4ed7df3a303c99050d13.webp"
+            alt="login page"
+            className="mx-auto my-12"
+          />
         </div>
         <div className="col-span-12 md:col-span-6">
           <div className=" mx-auto p-8">
@@ -78,11 +85,12 @@ function Login() {
                 </button>
               </div>
             </form>
-             <div className="mt-8 flex">
+            <div className="mt-8 flex">
               <p>Don’t have any account?</p>
-              <Link to='/register' className="text-[#57b846] ml-3">Sign Up</Link>
-             </div>
-          
+              <Link to="/register" className="text-[#57b846] ml-3">
+                Sign Up
+              </Link>
+            </div>
           </div>
         </div>
       </div>
