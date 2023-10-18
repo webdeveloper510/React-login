@@ -23,7 +23,7 @@ const routes = [
   {
     path: "/",
     children: [
-      { path: "/login", element: <Login /> },
+      { path: "/login", index: true, element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "*", element: <Navigate to={errorRoute()} /> },
     ],
