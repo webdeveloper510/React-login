@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import SideBar from "../Sidebar/sidebar";
 import Tabs from "../Common/tab";
-import Dashboard from "../Pages/dashboard";
+import Dashboard from "../Pages/dashbaord";
 
 function Layout() {
   const [tabs, setTabs] = useState([

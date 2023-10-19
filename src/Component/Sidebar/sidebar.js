@@ -3,17 +3,17 @@ import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Logo from "../../assets/image/logo.png";
-import Dashboard from "../Pages/dashboard";
 import Extensions from "../Pages/extensions";
 import Queues from "../Pages/queues";
 import Routess from "../Pages/routess";
 import Monitoring from "../Pages/monitoring";
 import Call from "../Pages/call";
 import Parameters from "../Pages/parameters";
+import Dashboard from "../Pages/dashbaord";
 
 function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
   const [active, setActive] = useState("");
-  const [expandedItem, setExpandedItem] = useState(null); 
+  const [expandedItem, setExpandedItem] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
         localStorage.clear();
         setTimeout(() => {
           navigate("/login");
-        }, 3000); 
+        }, 3000);
       } else {
         console.error("Logout failed");
       }
