@@ -316,16 +316,22 @@ function Dashboard() {
       <div className="">{tabs[activeTab]?.content}</div>
 
       <div className="px-8">
-        <p className="py-4 text-3xl font-semibold">Call In Progress</p>
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-5">
+        <div className="grid grid-cols-12 gap-4 ">
+          <div className="col-span-6">
+            <p className="py-4 text-3xl font-semibold">Call In Progress</p>
+          </div>
+          <div className="col-span-6 justify-end flex">
             <button
-              className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] text-white py-2 px-4 rounded-md"
+              className="border-b-2 border-black self-center"
+              type="button"
               onClick={openModal}
             >
-              Add New User
+              + Add Record
             </button>
           </div>
+        </div>
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-5"></div>
           <div className="col-span-4">
             <Input
               type="search"
