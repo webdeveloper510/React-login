@@ -1,30 +1,54 @@
 import React, { useEffect, useState } from "react";
-import Radio from "../Common/radio";
 import Input from "./input";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function EditCaller(props) {
+  const token = localStorage.getItem("token");
+  const [data, setData] = useState([]);
   const [user, setUser] = useState({
+    id: "",
     name: "",
-    queue: "",
     status: "",
-    isFax: "",
-    isDirectAllowed: "",
-    callerid: "",
     dtUpdated: "",
-    hasVoicemail: "",
   });
 
   const handleDataChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  console.log(user);
+  const handleUserUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${user.id}&bntOK=1&name=${user.name}&dtUpdated=${user.dtUpdated}&status=${user.status}&token=${token}`;
+      const response = await axios.post(apiUrl);
+      // setData(response.data.dialprofile.list);
+      console.log(response);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-  console.log("user in array", props.data);
+  const fetchData = async () => {
+    try {
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=list&token=${token}`;
+      const response = await axios.get(apiUrl);
+      setData(response.data.dialprofile.list);
+      console.log("Update response:", response);
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
-    setUser(props.data);
+    if (props.data) {
+      setUser(props.data);
+    }
+    fetchData();
   }, [props.data]);
+
   return (
     <>
       <div className="my-8 px-8">
@@ -32,7 +56,7 @@ function EditCaller(props) {
           {" "}
           Edit Call In Progress
         </p>
-        <form>
+        <form onSubmit={handleUserUpdate}>
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-3 self-center">
               <label> Name :</label>
@@ -45,90 +69,6 @@ function EditCaller(props) {
                 name="name"
                 onChange={handleDataChange}
                 placeholder="Enter Name"
-              />
-            </div>
-
-            <div className="col-span-3">
-              <label> Queue :</label>
-            </div>
-            <div className="col-span-8">
-              <Input
-                type="text"
-                label=""
-                name="queue"
-                onChange={handleDataChange}
-                defaultValue={user.queue}
-                placeholder=""
-              />
-            </div>
-
-            <div className="col-span-3">
-              <label> Is Direct Allowed :</label>
-            </div>
-            <div className="col-span-8">
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6">
-                  <Radio
-                    label="No"
-                    checked={user.isDirectAllowed === "no"}
-                    name="isDirectAllowed"
-                    id="radioOption1"
-                    value="no"
-                    onChange={handleDataChange}
-                  />
-                </div>
-                <div className="col-span-6">
-                  <Radio
-                    label="Yes"
-                    checked={user.isDirectAllowed === "yes"}
-                    name="isDirectAllowed"
-                    id="radioOption2"
-                    value="yes"
-                    onChange={handleDataChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-3">
-              <label> Has Voicemail :</label>
-            </div>
-            <div className="col-span-8">
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6">
-                  <Radio
-                    label="No"
-                    checked={user.hasVoicemail === "no"}
-                    name="hasVoicemail"
-                    id="radioOption1"
-                    value="no"
-                    onChange={handleDataChange}
-                  />
-                </div>
-                <div className="col-span-6">
-                  <Radio
-                    label="Yes"
-                    checked={user.hasVoicemail === "yes"}
-                    name="hasVoicemail"
-                    id="radioOption2"
-                    value="yes"
-                    onChange={handleDataChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-3">
-              <label> Caller Id :</label>
-            </div>
-            <div className="col-span-8">
-              <Input
-                type="number"
-                name="callerid"
-                defaultValue={user.callerid}
-                onChange={handleDataChange}
-                label=""
-                placeholder=""
               />
             </div>
 
@@ -147,31 +87,17 @@ function EditCaller(props) {
             </div>
 
             <div className="col-span-3">
-              <label> Is Fax :</label>
+              <label> Status :</label>
             </div>
             <div className="col-span-8">
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6">
-                  <Radio
-                    label="No"
-                    checked={user.isFax === "no"}
-                    name="isFax"
-                    id="radioOption1"
-                    value="no"
-                    onChange={handleDataChange}
-                  />
-                </div>
-                <div className="col-span-6">
-                  <Radio
-                    label="Yes"
-                    checked={user.isFax === "yes"}
-                    name="isFax"
-                    id="radioOption2"
-                    value="yes"
-                    onChange={handleDataChange}
-                  />
-                </div>
-              </div>
+              <Input
+                type="text"
+                name="status"
+                defaultValue={user.status}
+                onChange={handleDataChange}
+                label=""
+                placeholder=""
+              />
             </div>
 
             <div className="col-span-12 text-center">

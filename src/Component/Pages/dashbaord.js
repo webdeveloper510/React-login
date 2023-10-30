@@ -5,10 +5,11 @@ import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
 import { MdDelete } from "@react-icons/all-files/md/MdDelete";
 import Input from "../Common/input";
 import DataTable from "react-data-table-component";
-import DashboardTab from "../Common/dashboardTab";
 import EditCaller from "../Common/editCaller";
 import { IoIosCloseCircle } from "@react-icons/all-files/io/IoIosCloseCircle";
-import DashboardUser from "./dashboardUser";
+import Modal from "../Common/modal";
+import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const [data, setData] = useState([]);
@@ -19,15 +20,33 @@ function Dashboard() {
   const [tabs, setTabs] = useState([]);
   const [currentTab, setCurrentTab] = useState("Home");
   const [activeTab, setActiveTab] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [dtUpdated, setDtUpdated] = useState(false);
+  const [status, setStatus] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const expandEdit = (data) => {
     const tabContent = (
       <div>
-        <EditCaller data={data} />
+        <EditCaller
+          data={{
+            id: data.id,
+            name: data.name,
+            status: data.status,
+            dtUpdated: data.dtUpdated,
+          }}
+        />
       </div>
     );
 
-    // Check if a tab with the same label already exists
     const tabExists = tabs.some((tab) => data.name === tab.label);
 
     if (!tabExists) {
@@ -38,11 +57,8 @@ function Dashboard() {
 
       setTabs([...tabs, newTab]);
       setCurrentTab(data.name);
-
-      // Set the active tab to the newly added tab
       setActiveTab(tabs.length);
     } else {
-      // If the tab already exists, find its index and set it as the current tab
       const index = tabs.findIndex((tab) => data.name === tab.label);
       setCurrentTab(data.name);
       setActiveTab(index);
@@ -51,9 +67,10 @@ function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=user&action=list&token=${token}`;
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=list&token=${token}`;
       const response = await axios.get(apiUrl);
-      setData(response.data.user.list);
+      setData(response.data.dialprofile.list);
+      console.log(response);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -61,28 +78,13 @@ function Dashboard() {
 
   const columns = [
     {
+      name: "S. No.",
+      selector: (row, index) => index + 1,
+      sortable: true,
+    },
+    {
       name: "Name",
       selector: (row) => row.name,
-      sortable: true,
-    },
-    {
-      name: "Queue",
-      selector: (row) => row.queue,
-      sortable: true,
-    },
-    {
-      name: "Is Direct Allowed",
-      selector: (row) => row.isDirectAllowed,
-      sortable: true,
-    },
-    {
-      name: "Has Voicemail",
-      selector: (row) => row.hasVoicemail,
-      sortable: true,
-    },
-    {
-      name: "Caller Id",
-      selector: (row) => row.callerid,
       sortable: true,
     },
     {
@@ -91,8 +93,8 @@ function Dashboard() {
       sortable: true,
     },
     {
-      name: "Is Fax",
-      selector: (row) => row.isFax,
+      name: "Status",
+      selector: (row) => row.status,
       sortable: true,
     },
     {
@@ -102,14 +104,32 @@ function Dashboard() {
           <button onClick={() => expandEdit(row)}>
             <FaEdit className="w-5 h-5" />{" "}
           </button>
-          <button>
-            {" "}
-            <MdDelete className="w-5 h-5" />{" "}
+          <button
+            onClick={() => {
+              handleDelete(row.id);
+            }}
+          >
+            <MdDelete className="w-5 h-5" />
           </button>
         </div>
       ),
     },
   ];
+
+  const handleDelete = async (id) => {
+    try {
+      const apiDelete = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=delete&id=${id}&bntOK=1&token=${token}`;
+      const response = await axios.get(apiDelete);
+      const updatedOffers = Object.values(data).filter(
+        (data) => data.id !== id
+      );
+      setData(updatedOffers);
+      toast.success(response.data.message);
+      console.log("Search response", updatedOffers);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const fetchSearch = async () => {
     try {
@@ -172,10 +192,43 @@ function Dashboard() {
     setTabs(updatedTabs);
   };
 
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const apiAdd = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=add&name=${name}&dtUpdated=${dtUpdated}&status=${status}&token=${token}&status=A&bntOK=1`;
+      const response = await axios.post(apiAdd);
+      // setData(response);
+      console.log("add user======>>>", response);
+      setIsModalOpen(false);
+      toast.success(response.data.message);
+      if (
+        response.data &&
+        response.data.dialprofile &&
+        response.data.dialprofile.list
+      ) {
+        fetchData();
+      } else {
+        console.error("API response structure is not as expected.");
+      }
+
+      // Close the modal
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
+    const savedTabs = localStorage.getItem("tabs");
+    if (savedTabs) {
+      setTabs(JSON.parse(savedTabs));
+    }
     fetchData();
     fetchSearch();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tabs", JSON.stringify(tabs));
+  }, [tabs]);
 
   return (
     <>
@@ -184,7 +237,49 @@ function Dashboard() {
           Home
         </Link>
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <button onClick={closeModal} className="absolute right-1 top-1">
+          <AiOutlineCloseCircle className="w-8 h-8" />
+        </button>
+        <h2 className="text-2xl">Progress Edit</h2>
+        <hr className="my-2" />
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <Input
+                label={"Name"}
+                name="name"
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter Name"
+              />
+            </div>
 
+            <Input
+              label={"Dt Updated"}
+              type="text"
+              name="dtUpdated"
+              onChange={(e) => setDtUpdated(e.target.value)}
+              placeholder="Enter Dt Updated"
+            />
+            <Input
+              label={"Status"}
+              type="text"
+              name="status"
+              onChange={(e) => setStatus(e.target.value)}
+              placeholder="Enter Status"
+            />
+          </div>
+          <div className="text-center">
+            <button
+              type="submit"
+              className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
+            >
+              Add User
+            </button>
+          </div>
+        </form>
+      </Modal>
       <div className="pr-4">
         <ul className="flex border-b mt-3">
           {tabs.length > 0 &&
@@ -219,16 +314,18 @@ function Dashboard() {
       </div>
 
       <div className="">{tabs[activeTab]?.content}</div>
-      {/* <DashboardTab
-        data={tabs}
-        activeTab={currentTab}
-        handler={(value) => updateTabs(value)}
-        setActiveTab={setCurrentTab}
-      /> */}
+
       <div className="px-8">
         <p className="py-4 text-3xl font-semibold">Call In Progress</p>
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-5"></div>
+          <div className="col-span-5">
+            <button
+              className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] text-white py-2 px-4 rounded-md"
+              onClick={openModal}
+            >
+              Add New User
+            </button>
+          </div>
           <div className="col-span-4">
             <Input
               type="search"
@@ -246,7 +343,6 @@ function Dashboard() {
           </div>
         </div>
 
-        <div></div>
         <DataTable columns={columns} data={Object.values(data)} pagination />
       </div>
     </>

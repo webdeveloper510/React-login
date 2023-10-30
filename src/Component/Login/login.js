@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Input from "../Common/input";
-import logins from "../../assets/image/img-01.webp";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +25,7 @@ function Login() {
         localStorage.setItem("token", response.data.token);
         setTimeout(() => {
           navigate("/dashboard", { token: response.data.token });
-        }, 3000);
+        }, 2000);
       } else {
         toast.error(response.data.message);
       }
