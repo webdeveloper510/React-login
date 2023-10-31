@@ -20,7 +20,7 @@ function EditCaller(props) {
   const handleUserUpdate = async (e) => {
     e.preventDefault();
     try {
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${user.id}&bntOK=1&name=${user.name}&description=${user.dtUpdated}&status=${user.status}&token=${token}`;
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${user.id}&bntOK=1&name=${user.name}&description=${user.description}&status=${user.status}&token=${token}`;
       const response = await axios.post(apiUrl);
       // setData(response.data.dialprofile.list);
       console.log(response);
@@ -76,7 +76,7 @@ function EditCaller(props) {
               <label> Dt Updated :</label>
             </div>
             <div className="col-span-8">
-              <select
+              {/* <select
                 value={user.dtUpdated}
                 onChange={handleDataChange}
                 name="dtUpdated"
@@ -86,15 +86,15 @@ function EditCaller(props) {
                 <option value="A">Activated</option>
                 <option value="I">Inactivated</option>
                 <option value="C">Cancelled</option>
-              </select>
-              {/* <Input
+              </select> */}
+              <Input
                 type="text"
-                name="dtUpdated"
-                defaultValue={user.dtUpdated}
+                name="description"
+                defaultValue={user.description}
                 onChange={handleDataChange}
                 label=""
                 placeholder=""
-              /> */}
+              />
             </div>
 
             <div className="col-span-3 self-center">

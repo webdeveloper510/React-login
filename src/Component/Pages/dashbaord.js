@@ -22,7 +22,7 @@ function Dashboard() {
   const [activeTab, setActiveTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
-  const [dtUpdated, setDtUpdated] = useState(false);
+  const [description, setDescription] = useState(null);
   const [status, setStatus] = useState(false);
 
   const openModal = () => {
@@ -41,7 +41,7 @@ function Dashboard() {
             id: data.id,
             name: data.name,
             status: data.status,
-            dtUpdated: data.dtUpdated,
+            description: data.description,
           }}
         />
       </div>
@@ -88,8 +88,8 @@ function Dashboard() {
       sortable: true,
     },
     {
-      name: "Dt Updated",
-      selector: (row) => row.dtUpdated,
+      name: "Description",
+      selector: (row) => row.description,
       sortable: true,
     },
     {
@@ -195,7 +195,7 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const apiAdd = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=add&name=${name}&dtUpdated=${dtUpdated}&status=${status}&token=${token}&status=A&bntOK=1`;
+      const apiAdd = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=add&name=${name}&description=${description}&status=${status}&token=${token}&status=A&bntOK=1`;
       const response = await axios.post(apiAdd);
       // setData(response);
       // console.log("add user======>>>", response);
@@ -256,8 +256,14 @@ function Dashboard() {
             </div>
 
             <div>
-              <label> Dt Updated </label>
-              <select
+              <Input
+                label={"description "}
+                name="description "
+                type="text"
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter Name"
+              />
+              {/* <select
                 onChange={(e) => setDtUpdated(e.target.value)}
                 name="dtUpdated"
                 className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
@@ -267,7 +273,7 @@ function Dashboard() {
                 <option value="A">Activated</option>
                 <option value="I">Inactivated</option>
                 <option value="C">Cancelled</option>
-              </select>
+              </select> */}
             </div>
 
             <div>
