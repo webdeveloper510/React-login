@@ -70,7 +70,7 @@ function Dashboard() {
       const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=list&token=${token}`;
       const response = await axios.get(apiUrl);
       setData(response.data.dialprofile.list);
-      console.log(response);
+      console.log("get data =====>>", response.data.dialprofile.list);
     } catch (error) {
       console.error("Error:", error);
     }
