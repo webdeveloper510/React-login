@@ -125,7 +125,7 @@ function Dashboard() {
       );
       setData(updatedOffers);
       toast.success(response.data.message);
-      console.log("Search response", updatedOffers);
+      // console.log("Search response", updatedOffers);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -136,7 +136,7 @@ function Dashboard() {
       const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=cdr&action=all&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
       const response = await axios.get(apiSearch);
       setSearch(response.data.cdr.list);
-      console.log("Search response", response.data.cdr.list);
+      // console.log("Search response", response.data.cdr.list);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -198,7 +198,7 @@ function Dashboard() {
       const apiAdd = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=add&name=${name}&dtUpdated=${dtUpdated}&status=${status}&token=${token}&status=A&bntOK=1`;
       const response = await axios.post(apiAdd);
       // setData(response);
-      console.log("add user======>>>", response);
+      // console.log("add user======>>>", response);
       setIsModalOpen(false);
       toast.success(response.data.message);
       if (
@@ -241,7 +241,7 @@ function Dashboard() {
         <button onClick={closeModal} className="absolute right-1 top-1">
           <AiOutlineCloseCircle className="w-8 h-8" />
         </button>
-        <h2 className="text-2xl">Progress Edit</h2>
+        <h2 className="text-2xl">Progress</h2>
         <hr className="my-2" />
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
@@ -255,20 +255,35 @@ function Dashboard() {
               />
             </div>
 
-            <Input
-              label={"Dt Updated"}
-              type="text"
-              name="dtUpdated"
-              onChange={(e) => setDtUpdated(e.target.value)}
-              placeholder="Enter Dt Updated"
-            />
-            <Input
-              label={"Status"}
-              type="text"
-              name="status"
-              onChange={(e) => setStatus(e.target.value)}
-              placeholder="Enter Status"
-            />
+            <div>
+              <label> Dt Updated </label>
+              <select
+                onChange={(e) => setDtUpdated(e.target.value)}
+                name="dtUpdated"
+                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
+                displayEmpty
+              >
+                <option value="">Select Dt Updated</option>
+                <option value="A">Activated</option>
+                <option value="I">Inactivated</option>
+                <option value="C">Cancelled</option>
+              </select>
+            </div>
+
+            <div>
+              <label> Status </label>
+              <select
+                onChange={(e) => setStatus(e.target.value)}
+                name="status"
+                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
+                displayEmpty
+              >
+                <option value="">Select Status</option>
+                <option value="A">Activated</option>
+                <option value="I">Inactivated</option>
+                <option value="C">Cancelled</option>
+              </select>
+            </div>
           </div>
           <div className="text-center">
             <button

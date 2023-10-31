@@ -20,7 +20,7 @@ function EditCaller(props) {
   const handleUserUpdate = async (e) => {
     e.preventDefault();
     try {
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${user.id}&bntOK=1&name=${user.name}&dtUpdated=${user.dtUpdated}&status=${user.status}&token=${token}`;
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${user.id}&bntOK=1&name=${user.name}&description=${user.dtUpdated}&status=${user.status}&token=${token}`;
       const response = await axios.post(apiUrl);
       // setData(response.data.dialprofile.list);
       console.log(response);
@@ -72,32 +72,54 @@ function EditCaller(props) {
               />
             </div>
 
-            <div className="col-span-3">
+            <div className="col-span-3 self-center">
               <label> Dt Updated :</label>
             </div>
             <div className="col-span-8">
-              <Input
+              <select
+                value={user.dtUpdated}
+                onChange={handleDataChange}
+                name="dtUpdated"
+                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
+              >
+                <option value="">Select Dt Updated</option>
+                <option value="A">Activated</option>
+                <option value="I">Inactivated</option>
+                <option value="C">Cancelled</option>
+              </select>
+              {/* <Input
                 type="text"
                 name="dtUpdated"
                 defaultValue={user.dtUpdated}
                 onChange={handleDataChange}
                 label=""
                 placeholder=""
-              />
+              /> */}
             </div>
 
-            <div className="col-span-3">
+            <div className="col-span-3 self-center">
               <label> Status :</label>
             </div>
             <div className="col-span-8">
-              <Input
+              <select
+                value={user.status}
+                onChange={handleDataChange}
+                name="status"
+                className="bg-white px-4 w-full text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 pr-10 py-3"
+              >
+                <option value="">Select Status</option>
+                <option value="A">Activated</option>
+                <option value="I">Inactivated</option>
+                <option value="C">Cancelled</option>
+              </select>
+              {/* <Input
                 type="text"
                 name="status"
                 defaultValue={user.status}
                 onChange={handleDataChange}
                 label=""
                 placeholder=""
-              />
+              /> */}
             </div>
 
             <div className="col-span-12 text-center">

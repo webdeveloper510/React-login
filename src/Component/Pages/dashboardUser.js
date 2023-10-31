@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
 import { MdDelete } from "@react-icons/all-files/md/MdDelete";
 import Input from "../Common/input";
