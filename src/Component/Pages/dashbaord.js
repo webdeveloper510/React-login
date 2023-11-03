@@ -16,7 +16,6 @@ function Dashboard() {
   const [search, setSearch] = useState([]);
   const [list, setList] = useState([]);
   const token = localStorage.getItem("token");
-  const [tab_list, setTabList] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [currentTab, setCurrentTab] = useState("Home");
   const [activeTab, setActiveTab] = useState(0);
@@ -87,11 +86,11 @@ function Dashboard() {
       selector: (row) => row.name,
       sortable: true,
     },
-    {
-      name: "Description",
-      selector: (row) => row.description,
-      sortable: true,
-    },
+    // {
+    //   name: "Description",
+    //   selector: (row) => row.description,
+    //   sortable: true,
+    // },
     {
       name: "Status",
       selector: (row) => row.status,
@@ -263,17 +262,6 @@ function Dashboard() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter Name"
               />
-              {/* <select
-                onChange={(e) => setDtUpdated(e.target.value)}
-                name="dtUpdated"
-                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
-                displayEmpty
-              >
-                <option value="">Select Dt Updated</option>
-                <option value="A">Activated</option>
-                <option value="I">Inactivated</option>
-                <option value="C">Cancelled</option>
-              </select> */}
             </div>
 
             <div>
@@ -362,14 +350,13 @@ function Dashboard() {
           </div>
           <div className="col-span-3 text-end self-center">
             <button
-              className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] text-white py-2 px-4 rounded-md"
+              className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 text-white py-2 px-4 rounded-md"
               onClick={createCSV}
             >
               Download CSV
             </button>
           </div>
         </div>
-
         <DataTable columns={columns} data={Object.values(data)} pagination />
       </div>
     </>

@@ -72,11 +72,11 @@ function EditCaller(props) {
               />
             </div>
 
-            <div className="col-span-3 self-center">
-              <label> Dt Updated :</label>
+            {/* <div className="col-span-3 self-center">
+              <label> Description :</label>
             </div>
             <div className="col-span-8">
-              {/* <select
+               <select
                 value={user.dtUpdated}
                 onChange={handleDataChange}
                 name="dtUpdated"
@@ -87,7 +87,7 @@ function EditCaller(props) {
                 <option value="I">Inactivated</option>
                 <option value="C">Cancelled</option>
               </select> */}
-              <Input
+            {/* <Input
                 type="text"
                 name="description"
                 defaultValue={user.description}
@@ -95,7 +95,7 @@ function EditCaller(props) {
                 label=""
                 placeholder=""
               />
-            </div>
+            </div> */}
 
             <div className="col-span-3 self-center">
               <label> Status :</label>
