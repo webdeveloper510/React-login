@@ -19,12 +19,20 @@ function EditCaller(props) {
 
   const handleUserUpdate = async (e) => {
     e.preventDefault();
+    if (user.status === "Cancelled") {
+      user.status = "C";
+    } else if (user.status === "Activated") {
+      user.status = "A";
+    } else {
+      user.status = "I";
+    }
     try {
       const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${user.id}&bntOK=1&name=${user.name}&description=${user.description}&status=${user.status}&token=${token}`;
       const response = await axios.post(apiUrl);
       // setData(response.data.dialprofile.list);
       console.log(response);
       toast.success(response.data.message);
+      window.location.reload();
     } catch (error) {
       console.error("Error:", error);
     }
@@ -108,9 +116,9 @@ function EditCaller(props) {
                 className="bg-white px-4 w-full text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 pr-10 py-3"
               >
                 <option value="">Select Status</option>
-                <option value="A">Activated</option>
-                <option value="I">Inactivated</option>
-                <option value="C">Cancelled</option>
+                <option value="Activated">Activated</option>
+                <option value="Inactivated">Inactivated</option>
+                <option value="Cancelled">Cancelled</option>
               </select>
               {/* <Input
                 type="text"
