@@ -254,7 +254,7 @@ function Dashboard() {
               />
             </div>
 
-            <div>
+            {/* <div>
               <Input
                 label={"description "}
                 name="description "
@@ -262,9 +262,9 @@ function Dashboard() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter Name"
               />
-            </div>
+            </div> */}
 
-            <div>
+            <div className="col-span-2">
               <label> Status </label>
               <select
                 onChange={(e) => setStatus(e.target.value)}
@@ -272,7 +272,9 @@ function Dashboard() {
                 className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
                 displayEmpty
               >
-                <option value="">Select Status</option>
+                <option value="" selected>
+                  Select Status
+                </option>
                 <option value="A">Activated</option>
                 <option value="I">Inactivated</option>
                 <option value="C">Cancelled</option>
