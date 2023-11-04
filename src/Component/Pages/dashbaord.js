@@ -10,6 +10,7 @@ import { IoIosCloseCircle } from "@react-icons/all-files/io/IoIosCloseCircle";
 import Modal from "../Common/modal";
 import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
 import { toast } from "react-toastify";
+import deleteImage from "../../assets/image/x-button.png";
 
 function Dashboard() {
   const [data, setData] = useState([]);
@@ -20,9 +21,42 @@ function Dashboard() {
   const [currentTab, setCurrentTab] = useState("Home");
   const [activeTab, setActiveTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState(null);
   const [status, setStatus] = useState(false);
+  const [selectedDeleteId, setSelectedDeleteId] = useState(null);
+  const [selectedData, setSelectedData] = useState(null);
+
+  const handleDataChange = (event) => {
+    if (selectedData.status === "Cancelled") {
+      selectedData.status = "C";
+    } else if (selectedData.status === "Activated") {
+      selectedData.status = "A";
+    } else {
+      selectedData.status = "I";
+    }
+    setSelectedData({
+      ...selectedData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleUserUpdate = async (e) => {
+    e.preventDefault();
+
+    try {
+      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${selectedData.id}&bntOK=1&name=${selectedData.name}&description=${selectedData.description}&status=${selectedData.status}&token=${token}`;
+      const response = await axios.post(apiUrl);
+      console.log(response);
+      toast.success(response.data.message);
+      fetchData();
+      editClose();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -32,37 +66,56 @@ function Dashboard() {
     setIsModalOpen(false);
   };
 
-  const expandEdit = (data) => {
-    const tabContent = (
-      <div>
-        <EditCaller
-          data={{
-            id: data.id,
-            name: data.name,
-            status: data.status,
-            description: data.description,
-          }}
-        />
-      </div>
-    );
-
-    const tabExists = tabs.some((tab) => data.name === tab.label);
-
-    if (!tabExists) {
-      const newTab = {
-        label: data.name,
-        content: tabContent,
-      };
-
-      setTabs([...tabs, newTab]);
-      setCurrentTab(data.name);
-      setActiveTab(tabs.length);
-    } else {
-      const index = tabs.findIndex((tab) => data.name === tab.label);
-      setCurrentTab(data.name);
-      setActiveTab(index);
-    }
+  const editOpen = (data) => {
+    setIsEditOpen(true);
+    console.log(data.dtUpdated);
+    setSelectedData(data);
   };
+
+  const editClose = () => {
+    setIsEditOpen(false);
+  };
+
+  const openModal1 = (id) => {
+    setIsModalOpen1(true);
+    setSelectedDeleteId(id);
+  };
+
+  const closeModal1 = () => {
+    setIsModalOpen1(false);
+  };
+
+  // const expandEdit = (data) => {
+  //   const tabContent = (
+  //     <div>
+  //       <EditCaller
+  //         data={{
+  //           id: data.id,
+  //           name: data.name,
+  //           status: data.status,
+  //           description: data.description,
+  //         }}
+  //       />
+  //     </div>
+  //   );
+
+  //   const tabExists = tabs.some((tab) => data.name === tab.label);
+
+  //   if (!tabExists) {
+  //     const newTab = {
+  //       label: data.name,
+  //       content: tabContent,
+  //     };
+
+  //     setTabs([...tabs, newTab]);
+  //     setCurrentTab(data.name);
+  //     setActiveTab(tabs.length);
+  //   } else {
+  //     const index = tabs.findIndex((tab) => data.name === tab.label);
+  //     setCurrentTab(data.name);
+  //     setActiveTab(index);
+  //   }
+  // };
 
   const fetchData = async () => {
     try {
@@ -86,11 +139,6 @@ function Dashboard() {
       selector: (row) => row.name,
       sortable: true,
     },
-    // {
-    //   name: "Description",
-    //   selector: (row) => row.description,
-    //   sortable: true,
-    // },
     {
       name: "Status",
       selector: (row) => row.status,
@@ -100,12 +148,12 @@ function Dashboard() {
       name: "Action",
       cell: (row) => (
         <div>
-          <button onClick={() => expandEdit(row)}>
-            <FaEdit className="w-5 h-5" />{" "}
+          <button onClick={() => editOpen(row)}>
+            <FaEdit className="w-5 h-5" />
           </button>
           <button
             onClick={() => {
-              handleDelete(row.id);
+              openModal1(row.id);
             }}
           >
             <MdDelete className="w-5 h-5" />
@@ -124,7 +172,7 @@ function Dashboard() {
       );
       setData(updatedOffers);
       toast.success(response.data.message);
-      // console.log("Search response", updatedOffers);
+      setIsModalOpen1(false);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -135,7 +183,6 @@ function Dashboard() {
       const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=cdr&action=all&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
       const response = await axios.get(apiSearch);
       setSearch(response.data.cdr.list);
-      // console.log("Search response", response.data.cdr.list);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -186,31 +233,28 @@ function Dashboard() {
     link.click();
   }
 
-  const handleTabClose = (index) => {
-    const updatedTabs = tabs.filter((_, i) => i !== index);
-    setTabs(updatedTabs);
-  };
+  // const handleTabClose = (index) => {
+  //   const updatedTabs = tabs.filter((_, i) => i !== index);
+  //   setTabs(updatedTabs);
+  // };
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const apiAdd = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=add&name=${name}&description=${description}&status=${status}&token=${token}&status=A&bntOK=1`;
       const response = await axios.post(apiAdd);
-      // setData(response);
-      // console.log("add user======>>>", response);
       setIsModalOpen(false);
       toast.success(response.data.message);
-      if (
-        response.data &&
-        response.data.dialprofile &&
-        response.data.dialprofile.list
-      ) {
-        fetchData();
-      } else {
-        console.error("API response structure is not as expected.");
-      }
-
-      // Close the modal
+      fetchData();
+      // if (
+      //   response.data &&
+      //   response.data.dialprofile &&
+      //   response.data.dialprofile.list
+      // ) {
+      //   fetchData();
+      // } else {
+      //   console.error("API response structure is not as expected.");
+      // }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -236,6 +280,37 @@ function Dashboard() {
           Home
         </Link>
       </div>
+
+      <Modal isOpen={isModalOpen1} onClose={closeModal1}>
+        <button onClick={closeModal1} className="absolute right-1 top-1">
+          <AiOutlineCloseCircle className="w-8 h-8" />
+        </button>
+        <img
+          src={deleteImage}
+          alt="Delete Icons"
+          className="text-center mt-4 h-[120px] mx-auto"
+        />
+        <div className="text-center text-4xl my-8">Are you Sure ?</div>
+        <div className="text-center mb-4">
+          <button
+            type="button"
+            onClick={closeModal1}
+            className="bg-[#fff] border-2 mr-3 border-[#57b846] mt-3 text-[#57b846] py-3 px-12 text-lg mx-auto rounded-[25px]"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleDelete(selectedDeleteId);
+            }}
+            className="bg-[#57b846] border-2 border-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
+          >
+            Yes
+          </button>
+        </div>
+      </Modal>
+
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <button onClick={closeModal} className="absolute right-1 top-1">
           <AiOutlineCloseCircle className="w-8 h-8" />
@@ -253,29 +328,16 @@ function Dashboard() {
                 placeholder="Enter Name"
               />
             </div>
-
-            {/* <div>
-              <Input
-                label={"description "}
-                name="description "
-                type="text"
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter Name"
-              />
-            </div> */}
-
             <div className="col-span-2">
               <label> Status </label>
               <select
                 onChange={(e) => setStatus(e.target.value)}
                 name="status"
                 className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
-                displayEmpty
               >
-                <option value="" selected>
-                  Select Status
+                <option value="A" selected>
+                  Activated
                 </option>
-                <option value="A">Activated</option>
                 <option value="I">Inactivated</option>
                 <option value="C">Cancelled</option>
               </select>
@@ -291,7 +353,51 @@ function Dashboard() {
           </div>
         </form>
       </Modal>
-      <div className="pr-4">
+
+      <Modal isOpen={isEditOpen} onClose={editClose}>
+        <button onClick={editClose} className="absolute right-1 top-1">
+          <AiOutlineCloseCircle className="w-8 h-8" />
+        </button>
+        <h2 className="text-2xl">Edit Call In Progress</h2>
+        <hr className="my-2" />
+        <form onSubmit={handleUserUpdate}>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <Input
+                label={"Name"}
+                name="name"
+                defaultValue={selectedData ? selectedData.name : ""}
+                type="text"
+                onChange={handleDataChange}
+                placeholder="Enter Name"
+              />
+            </div>
+            <div className="col-span-2">
+              <label> Status </label>
+              <select
+                defaultValue={selectedData?.status}
+                onChange={handleDataChange}
+                name="status"
+                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
+              >
+                <option value="">Select Status</option>
+                <option value="Activated">Activated</option>
+                <option value="Inactivated">Inactivated</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div className="text-center">
+            <button
+              type="submit"
+              className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
+            >
+              Edit Call In Progress
+            </button>
+          </div>
+        </form>
+      </Modal>
+      {/* <div className="pr-4">
         <ul className="flex border-b mt-3">
           {tabs.length > 0 &&
             tabs?.map((tab, index) => (
@@ -324,7 +430,7 @@ function Dashboard() {
         </ul>
       </div>
 
-      <div className="">{tabs[activeTab]?.content}</div>
+      <div className="">{tabs[activeTab]?.content}</div> */}
 
       <div className="px-8">
         <div className="grid grid-cols-12 gap-4 ">

@@ -120,14 +120,6 @@ function EditCaller(props) {
                 <option value="Inactivated">Inactivated</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
-              {/* <Input
-                type="text"
-                name="status"
-                defaultValue={user.status}
-                onChange={handleDataChange}
-                label=""
-                placeholder=""
-              /> */}
             </div>
 
             <div className="col-span-12 text-center">
