@@ -129,6 +129,7 @@ function Dashboard() {
       const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=list&token=${token}`;
       const response = await axios.get(apiUrl);
       setData(response.data.dialprofile.list);
+      setList(response.data.dialprofile.list)
       console.log("get data =====>>", response.data.dialprofile.list);
     } catch (error) {
       console.error("Error:", error);
@@ -200,7 +201,9 @@ function Dashboard() {
       const filterValue = e.target.value.toLowerCase();
       const filteredData = Object.values(data).filter((row) =>
         columns.some((column) =>
-          (row[column.selector] || "")
+       // console.log(column.name)
+       // console.log(row)
+          (row['name'] || "")
             .toString()
             .toLowerCase()
             .includes(filterValue)
