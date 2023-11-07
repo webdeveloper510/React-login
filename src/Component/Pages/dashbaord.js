@@ -203,8 +203,7 @@ function Dashboard() {
       const filterValue = e.target.value.toLowerCase();
       const filteredData = Object.values(data).filter((row) =>
         columns.some((column) =>
-       // console.log(column.name)
-       // console.log(row)
+
           (row['name'] || "")
             .toString()
             .toLowerCase()
@@ -218,11 +217,11 @@ function Dashboard() {
   }
 
   function createCSV() {
-    console.log(search)
-    const csvContent =
+    if(Object.values(data).length!==0){
+      const csvContent =
       "data:text/csv;charset=utf-8," +
       "ID,Name,Status,dtUpdated\n" +
-      Object.values(search)
+      Object.values(data)
         .map((row) =>
           [
             row.id,
@@ -239,6 +238,11 @@ function Dashboard() {
     link.setAttribute("download", "data.csv");
     document.body.appendChild(link);
     link.click();
+    }
+    else{
+      toast.error('No Record to Download')
+    }
+  
   }
 
   // const handleTabClose = (index) => {
