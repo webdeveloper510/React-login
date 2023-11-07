@@ -27,7 +27,7 @@ function Dashboard() {
   const [description, setDescription] = useState(null);
   const [status, setStatus] = useState(false);
   const [selectedDeleteId, setSelectedDeleteId] = useState(null);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedData, setSelectedData] = useState("");
 
   const handleDataChange = (event) => {
     if (selectedData.status === "Cancelled") {
@@ -52,6 +52,7 @@ function Dashboard() {
       console.log(response);
       toast.success(response.data.message);
       fetchData();
+      localStorage.removeItem("modalEdit");
       editClose();
     } catch (error) {
       console.error("Error:", error);
@@ -60,20 +61,26 @@ function Dashboard() {
 
   const openModal = () => {
     setIsModalOpen(true);
+    localStorage.setItem("modalOpen", true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    localStorage.removeItem("modalOpen");
   };
 
   const editOpen = (data) => {
     setIsEditOpen(true);
     console.log(data.dtUpdated);
+    console.log(data);
     setSelectedData(data);
+    localStorage.setItem("modalEdit", true);
+    localStorage.setItem("modalData", JSON.stringify(data));
   };
 
   const editClose = () => {
     setIsEditOpen(false);
+    localStorage.removeItem("modalEdit");
   };
 
   const openModal1 = (id) => {
@@ -246,6 +253,7 @@ function Dashboard() {
       setIsModalOpen(false);
       toast.success(response.data.message);
       fetchData();
+      localStorage.removeItem("modalOpen");
       // if (
       //   response.data &&
       //   response.data.dialprofile &&
@@ -267,6 +275,12 @@ function Dashboard() {
     }
     fetchData();
     fetchSearch();
+    const isOpen1 = localStorage.getItem("modalEdit") === "true";
+    const data = JSON.parse(localStorage.getItem("modalData"));
+    setSelectedData(data);
+    setIsEditOpen(isOpen1);
+    const isOpen = localStorage.getItem("modalOpen") === "true";
+    setIsModalOpen(isOpen);
   }, []);
 
   useEffect(() => {

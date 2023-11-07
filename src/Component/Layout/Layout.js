@@ -35,7 +35,7 @@ function Layout() {
           setActiveTab={setCurrentTab}
         />
       </div>
-      <div className="w-9/12 h-full">
+      <div className="w-9/12 h-full position-relative">
         <Tabs
           handler={(value) => updateTabs(value)}
           activeTab={currentTab}

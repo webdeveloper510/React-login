@@ -71,7 +71,7 @@ const Tabs = ({ data, activeTab, setActiveTab, handler }) => {
         </ul>
       </div>
 
-      <div className="">{tabs[activeTab]?.content} </div>
+      <div className="relative">{tabs[activeTab]?.content} </div>
     </div>
   );
 };
