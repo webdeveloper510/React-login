@@ -30,13 +30,13 @@ function Dashboard() {
   const [selectedData, setSelectedData] = useState("");
 
   const handleDataChange = (event) => {
-    if (selectedData.status === "Cancelled") {
-      selectedData.status = "C";
-    } else if (selectedData.status === "Activated") {
-      selectedData.status = "A";
-    } else {
-      selectedData.status = "I";
-    }
+    // if (selectedData.status === "Cancelled") {
+    //   selectedData.status = "C";
+    // } else if (selectedData.status === "Activated") {
+    //   selectedData.status = "A";
+    // } else {
+    //   selectedData.status = "I";
+    // }
     setSelectedData({
       ...selectedData,
       [event.target.name]: event.target.value,
