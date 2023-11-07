@@ -188,7 +188,7 @@ function Dashboard() {
 
   const fetchSearch = async () => {
     try {
-      const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=cdr&action=all&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
+      const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=dialprofile&action=all&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
       const response = await axios.get(apiSearch);
       setSearch(response.data.cdr.list);
     } catch (error) {
