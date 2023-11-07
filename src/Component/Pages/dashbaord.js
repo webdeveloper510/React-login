@@ -130,6 +130,7 @@ function Dashboard() {
       const response = await axios.get(apiUrl);
       setData(response.data.dialprofile.list);
       setList(response.data.dialprofile.list)
+      setSearch(response.data.dialprofile.list)
       console.log("get data =====>>", response.data.dialprofile.list);
     } catch (error) {
       console.error("Error:", error);
@@ -188,8 +189,9 @@ function Dashboard() {
 
   const fetchSearch = async () => {
     try {
-      const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=dialprofile&action=all&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
+      const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=dialprofile&action=list&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
       const response = await axios.get(apiSearch);
+      console.error("response:", response.data.cdr.list);
       setSearch(response.data.cdr.list);
     } catch (error) {
       console.error("Error:", error);
@@ -216,21 +218,17 @@ function Dashboard() {
   }
 
   function createCSV() {
+    console.log(search)
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      "id,calldate,clid,disposition,dst,duration,billsec,src,userfield\n" +
+      "ID,Name,Status,dtUpdated\n" +
       Object.values(search)
         .map((row) =>
           [
             row.id,
-            row.calldate,
-            row.clid,
-            row.disposition,
-            row.dst,
-            row.duration,
-            row.billsec,
-            row.src,
-            row.userfield,
+            row.name,
+            row.status,
+            row.dtUpdated
           ].join(",")
         )
         .join("\n");
@@ -277,7 +275,7 @@ function Dashboard() {
       setTabs(JSON.parse(savedTabs));
     }
     fetchData();
-    fetchSearch();
+    //fetchSearch();
     const isOpen1 = localStorage.getItem("modalEdit") === "true";
     const data = JSON.parse(localStorage.getItem("modalData"));
     setSelectedData(data);
