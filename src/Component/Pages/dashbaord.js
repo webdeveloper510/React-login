@@ -18,14 +18,16 @@ function Dashboard() {
   const [list, setList] = useState([]);
   const token = localStorage.getItem("token");
   const [tabs, setTabs] = useState([]);
-  const [currentTab, setCurrentTab] = useState("Home");
-  const [activeTab, setActiveTab] = useState(0);
+  // const [currentTab, setCurrentTab] = useState("Home");
+  // const [activeTab, setActiveTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [name, setName] = useState(localStorage.getItem("add_data") || "");
   const [description, setDescription] = useState(null);
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(
+    localStorage.getItem("add_Status") || "Activated"
+  );
   const [selectedDeleteId, setSelectedDeleteId] = useState(null);
   const [selectedData, setSelectedData] = useState("");
 
@@ -71,6 +73,7 @@ function Dashboard() {
     setIsModalOpen(false);
     localStorage.removeItem("modalOpen");
     localStorage.removeItem("add_data");
+    localStorage.removeItem("add_Status");
   };
 
   const editOpen = (data) => {
@@ -251,6 +254,7 @@ function Dashboard() {
       fetchData();
       localStorage.removeItem("modalOpen");
       localStorage.removeItem("add_data");
+      localStorage.removeItem("add_Status");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -262,7 +266,6 @@ function Dashboard() {
       setTabs(JSON.parse(savedTabs));
     }
     fetchData();
-    //fetchSearch();
     const isOpen1 = localStorage.getItem("modalEdit") === "true";
     const data = JSON.parse(localStorage.getItem("modalData"));
     setSelectedData(data);
@@ -277,7 +280,8 @@ function Dashboard() {
 
   useEffect(() => {
     localStorage.setItem("add_data", name);
-  }, [name]);
+    localStorage.setItem("add_Status", status);
+  }, [name, status]);
 
   return (
     <>
@@ -341,10 +345,9 @@ function Dashboard() {
                 onChange={(e) => setStatus(e.target.value)}
                 name="status"
                 className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
+                defaultValue={status}
               >
-                <option value="A" selected>
-                  Activated
-                </option>
+                <option value="A">Activated</option>
                 <option value="I">Inactivated</option>
                 <option value="C">Cancelled</option>
               </select>
@@ -439,7 +442,7 @@ function Dashboard() {
 
       <div className="">{tabs[activeTab]?.content}</div> */}
 
-      <div className="px-8">
+      <div className="px-8 min-h-screen">
         <div className="grid grid-cols-12 gap-4 ">
           <div className="col-span-6">
             <p className="py-4 text-3xl font-semibold">Call In Progress</p>
