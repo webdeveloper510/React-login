@@ -29,7 +29,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       if (response.ok) {
         toast.success("User is logged out!");
         console.log(response);
-        localStorage.clear();
+        localStorage.removeItem("token");
         setTimeout(() => {
           navigate("/login");
         }, 3000);

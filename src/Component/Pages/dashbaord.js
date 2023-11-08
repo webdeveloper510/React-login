@@ -23,7 +23,7 @@ function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(localStorage.getItem("add_data") || "");
   const [description, setDescription] = useState(null);
   const [status, setStatus] = useState(false);
   const [selectedDeleteId, setSelectedDeleteId] = useState(null);
@@ -41,6 +41,9 @@ function Dashboard() {
       ...selectedData,
       [event.target.name]: event.target.value,
     });
+    let data = JSON.parse(localStorage.getItem("modalData"));
+    data[event.target.name] = event.target.value;
+    localStorage.setItem("modalData", JSON.stringify(data));
   };
 
   const handleUserUpdate = async (e) => {
@@ -67,6 +70,7 @@ function Dashboard() {
   const closeModal = () => {
     setIsModalOpen(false);
     localStorage.removeItem("modalOpen");
+    localStorage.removeItem("add_data");
   };
 
   const editOpen = (data) => {
@@ -129,8 +133,8 @@ function Dashboard() {
       const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=list&token=${token}`;
       const response = await axios.get(apiUrl);
       setData(response.data.dialprofile.list);
-      setList(response.data.dialprofile.list)
-      setSearch(response.data.dialprofile.list)
+      setList(response.data.dialprofile.list);
+      setSearch(response.data.dialprofile.list);
       console.log("get data =====>>", response.data.dialprofile.list);
     } catch (error) {
       console.error("Error:", error);
@@ -203,11 +207,7 @@ function Dashboard() {
       const filterValue = e.target.value.toLowerCase();
       const filteredData = Object.values(data).filter((row) =>
         columns.some((column) =>
-
-          (row['name'] || "")
-            .toString()
-            .toLowerCase()
-            .includes(filterValue)
+          (row["name"] || "").toString().toLowerCase().includes(filterValue)
         )
       );
       setData(filteredData);
@@ -217,32 +217,23 @@ function Dashboard() {
   }
 
   function createCSV() {
-    if(Object.values(data).length!==0){
+    if (Object.values(data).length !== 0) {
       const csvContent =
-      "data:text/csv;charset=utf-8," +
-      "ID,Name,Status,dtUpdated\n" +
-      Object.values(data)
-        .map((row) =>
-          [
-            row.id,
-            row.name,
-            row.status,
-            row.dtUpdated
-          ].join(",")
-        )
-        .join("\n");
+        "data:text/csv;charset=utf-8," +
+        "ID,Name,Status,dtUpdated\n" +
+        Object.values(data)
+          .map((row) => [row.id, row.name, row.status, row.dtUpdated].join(","))
+          .join("\n");
 
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "data.csv");
-    document.body.appendChild(link);
-    link.click();
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "data.csv");
+      document.body.appendChild(link);
+      link.click();
+    } else {
+      toast.error("No Record to Download");
     }
-    else{
-      toast.error('No Record to Download')
-    }
-  
   }
 
   // const handleTabClose = (index) => {
@@ -259,15 +250,7 @@ function Dashboard() {
       toast.success(response.data.message);
       fetchData();
       localStorage.removeItem("modalOpen");
-      // if (
-      //   response.data &&
-      //   response.data.dialprofile &&
-      //   response.data.dialprofile.list
-      // ) {
-      //   fetchData();
-      // } else {
-      //   console.error("API response structure is not as expected.");
-      // }
+      localStorage.removeItem("add_data");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -291,6 +274,10 @@ function Dashboard() {
   useEffect(() => {
     localStorage.setItem("tabs", JSON.stringify(tabs));
   }, [tabs]);
+
+  useEffect(() => {
+    localStorage.setItem("add_data", name);
+  }, [name]);
 
   return (
     <>
@@ -343,6 +330,7 @@ function Dashboard() {
                 label={"Name"}
                 name="name"
                 type="text"
+                defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter Name"
               />
