@@ -74,6 +74,8 @@ function Dashboard() {
     localStorage.removeItem("modalOpen");
     localStorage.removeItem("add_data");
     localStorage.removeItem("add_Status");
+    setName("");
+    setStatus("Activated");
   };
 
   const editOpen = (data) => {
