@@ -106,7 +106,7 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
     <div className="h-full">
       <div className="min-h-[100vh] h-full bg-custom-gradient">
         {/* <img src={Logo} className="mx-auto py-4" alt="logo" /> */}
-        <h2 className="mx-auto py-4 logo_text">Medial Logo</h2>
+        <h2 className="mx-auto py-4 logo_text">Medical Logo</h2>
       
         <div className="shadow-sm min-h-[93vh] h-full">
           <div className="w-[280px] mx-auto pt-8">
