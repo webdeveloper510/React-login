@@ -1,488 +1,65 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
-import { MdDelete } from "@react-icons/all-files/md/MdDelete";
-import Input from "../Common/input";
-import DataTable from "react-data-table-component";
-import EditCaller from "../Common/editCaller";
-import { IoIosCloseCircle } from "@react-icons/all-files/io/IoIosCloseCircle";
-import Modal from "../Common/modal";
-import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
-import { toast } from "react-toastify";
-import deleteImage from "../../assets/image/x-button.png";
+import React, { useState } from "react";
 
-function Dashboard() {
-  const [data, setData] = useState([]);
-  const [search, setSearch] = useState([]);
-  const [list, setList] = useState([]);
-  const token = localStorage.getItem("token");
-  const [tabs, setTabs] = useState([]);
-  // const [currentTab, setCurrentTab] = useState("Home");
-  // const [activeTab, setActiveTab] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [name, setName] = useState(localStorage.getItem("add_data") || "");
-  const [description, setDescription] = useState(null);
-  const [status, setStatus] = useState(
-    localStorage.getItem("add_Status") || "Activated"
-  );
-  const [selectedDeleteId, setSelectedDeleteId] = useState(null);
-  const [selectedData, setSelectedData] = useState("");
-
-  const handleDataChange = (event) => {
-    // if (selectedData.status === "Cancelled") {
-    //   selectedData.status = "C";
-    // } else if (selectedData.status === "Activated") {
-    //   selectedData.status = "A";
-    // } else {
-    //   selectedData.status = "I";
-    // }
-    setSelectedData({
-      ...selectedData,
-      [event.target.name]: event.target.value,
-    });
-    let data = JSON.parse(localStorage.getItem("modalData"));
-    data[event.target.name] = event.target.value;
-    localStorage.setItem("modalData", JSON.stringify(data));
-  };
-
-  const handleUserUpdate = async (e) => {
-    e.preventDefault();
-
-    try {
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=update&id=${selectedData.id}&bntOK=1&name=${selectedData.name}&description=${selectedData.description}&status=${selectedData.status}&token=${token}`;
-      const response = await axios.post(apiUrl);
-      console.log(response);
-      toast.success(response.data.message);
-      fetchData();
-      localStorage.removeItem("modalEdit");
-      editClose();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-    localStorage.setItem("modalOpen", true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    localStorage.removeItem("modalOpen");
-    localStorage.removeItem("add_data");
-    localStorage.removeItem("add_Status");
-    setName("");
-    setStatus("Activated");
-  };
-
-  const editOpen = (data) => {
-    setIsEditOpen(true);
-    console.log(data.dtUpdated);
-    console.log(data);
-    setSelectedData(data);
-    localStorage.setItem("modalEdit", true);
-    localStorage.setItem("modalData", JSON.stringify(data));
-  };
-
-  const editClose = () => {
-    setIsEditOpen(false);
-    localStorage.removeItem("modalEdit");
-  };
-
-  const openModal1 = (id) => {
-    setIsModalOpen1(true);
-    setSelectedDeleteId(id);
-  };
-
-  const closeModal1 = () => {
-    setIsModalOpen1(false);
-  };
-
-  // const expandEdit = (data) => {
-  //   const tabContent = (
-  //     <div>
-  //       <EditCaller
-  //         data={{
-  //           id: data.id,
-  //           name: data.name,
-  //           status: data.status,
-  //           description: data.description,
-  //         }}
-  //       />
-  //     </div>
-  //   );
-
-  //   const tabExists = tabs.some((tab) => data.name === tab.label);
-
-  //   if (!tabExists) {
-  //     const newTab = {
-  //       label: data.name,
-  //       content: tabContent,
-  //     };
-
-  //     setTabs([...tabs, newTab]);
-  //     setCurrentTab(data.name);
-  //     setActiveTab(tabs.length);
-  //   } else {
-  //     const index = tabs.findIndex((tab) => data.name === tab.label);
-  //     setCurrentTab(data.name);
-  //     setActiveTab(index);
-  //   }
-  // };
-
-  const fetchData = async () => {
-    try {
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=list&token=${token}`;
-      const response = await axios.get(apiUrl);
-      setData(response.data.dialprofile.list);
-      setList(response.data.dialprofile.list);
-      setSearch(response.data.dialprofile.list);
-      console.log("get data =====>>", response.data.dialprofile.list);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const columns = [
+const Dashboard = () => {
+  // Sample data for the table
+  const [websites, setWebsites] = useState([
     {
-      name: "S. No.",
-      selector: (row, index) => index + 1,
-      sortable: true,
+      country: "United States",
+      url: "https://example.com",
+      serviceProvider: "GoDaddy",
     },
     {
-      name: "Name",
-      selector: (row) => row.name,
-      sortable: true,
+      country: "India",
+      url: "https://example.in",
+      serviceProvider: "Hostinger",
     },
     {
-      name: "Status",
-      selector: (row) => row.status,
-      sortable: true,
+      country: "Germany",
+      url: "https://example.de",
+      serviceProvider: "Bluehost",
     },
-    {
-      name: "Action",
-      cell: (row) => (
-        <div>
-          <button onClick={() => editOpen(row)}>
-            <FaEdit className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => {
-              openModal1(row.id);
-            }}
-          >
-            <MdDelete className="w-5 h-5" />
-          </button>
-        </div>
-      ),
-    },
-  ];
-
-  const handleDelete = async (id) => {
-    try {
-      const apiDelete = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=delete&id=${id}&bntOK=1&token=${token}`;
-      const response = await axios.get(apiDelete);
-      const updatedOffers = Object.values(data).filter(
-        (data) => data.id !== id
-      );
-      setData(updatedOffers);
-      toast.success(response.data.message);
-      setIsModalOpen1(false);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const fetchSearch = async () => {
-    try {
-      const apiSearch = `http://v01.kerne.org:500/pbx/pbx001/webapi/index.php?module=dialprofile&action=list&order=clid&searchBnt=1&searchText=206&searchType=contain&searchField=dst&searchBnt=1&calldateStart=01/01/2023&pageRecords=99&page=2&token=${token}`;
-      const response = await axios.get(apiSearch);
-      console.error("response:", response.data.cdr.list);
-      setSearch(response.data.cdr.list);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  function handleFilter(e) {
-    if (e.target.value.length > 0) {
-      const filterValue = e.target.value.toLowerCase();
-      const filteredData = Object.values(data).filter((row) =>
-        columns.some((column) =>
-          (row["name"] || "").toString().toLowerCase().includes(filterValue)
-        )
-      );
-      setData(filteredData);
-    } else {
-      setData(list);
-    }
-  }
-
-  function createCSV() {
-    if (Object.values(data).length !== 0) {
-      const csvContent =
-        "data:text/csv;charset=utf-8," +
-        "ID,Name,Status,dtUpdated\n" +
-        Object.values(data)
-          .map((row) => [row.id, row.name, row.status, row.dtUpdated].join(","))
-          .join("\n");
-
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "data.csv");
-      document.body.appendChild(link);
-      link.click();
-    } else {
-      toast.error("No Record to Download");
-    }
-  }
-
-  // const handleTabClose = (index) => {
-  //   const updatedTabs = tabs.filter((_, i) => i !== index);
-  //   setTabs(updatedTabs);
-  // };
-
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      const apiAdd = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=dialprofile&action=add&name=${name}&description=${description}&status=${status}&token=${token}&status=A&bntOK=1`;
-      const response = await axios.post(apiAdd);
-      setIsModalOpen(false);
-      toast.success(response.data.message);
-      fetchData();
-      localStorage.removeItem("modalOpen");
-      localStorage.removeItem("add_data");
-      localStorage.removeItem("add_Status");
-      setName("");
-      setStatus("Activated");
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    const savedTabs = localStorage.getItem("tabs");
-    if (savedTabs) {
-      setTabs(JSON.parse(savedTabs));
-    }
-    fetchData();
-    const isOpen1 = localStorage.getItem("modalEdit") === "true";
-    const data = JSON.parse(localStorage.getItem("modalData"));
-    setSelectedData(data);
-    setIsEditOpen(isOpen1);
-    const isOpen = localStorage.getItem("modalOpen") === "true";
-    setIsModalOpen(isOpen);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("tabs", JSON.stringify(tabs));
-  }, [tabs]);
-
-  useEffect(() => {
-    localStorage.setItem("add_data", name);
-    localStorage.setItem("add_Status", status);
-  }, [name, status]);
+  ]);
 
   return (
-    <>
-      <div className="p-4 bg-gradient-to-r from-[#c850c0] to-[#4158d0]">
-        <Link to={"/dashboard"} className="text-white">
-          Home
-        </Link>
-      </div>
+    <div className="w-10/12 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Submitted Websites</h2>
 
-      <Modal isOpen={isModalOpen1} onClose={closeModal1}>
-        <button onClick={closeModal1} className="absolute right-1 top-1">
-          <AiOutlineCloseCircle className="w-8 h-8" />
-        </button>
-        <img
-          src={deleteImage}
-          alt="Delete Icons"
-          className="text-center mt-4 h-[120px] mx-auto"
-        />
-        <div className="text-center text-4xl my-8">Are you Sure ?</div>
-        <div className="text-center mb-4">
-          <button
-            type="button"
-            onClick={closeModal1}
-            className="bg-[#fff] border-2 mr-3 border-[#57b846] mt-3 text-[#57b846] py-3 px-12 text-lg mx-auto rounded-[25px]"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              handleDelete(selectedDeleteId);
-            }}
-            className="bg-[#57b846] border-2 border-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
-          >
-            Yes
-          </button>
-        </div>
-      </Modal>
-
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <button onClick={closeModal} className="absolute right-1 top-1">
-          <AiOutlineCloseCircle className="w-8 h-8" />
-        </button>
-        <h2 className="text-2xl">Progress</h2>
-        <hr className="my-2" />
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <Input
-                label={"Name"}
-                name="name"
-                type="text"
-                defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter Name"
-              />
-            </div>
-            <div className="col-span-2">
-              <label> Status </label>
-              <select
-                onChange={(e) => setStatus(e.target.value)}
-                name="status"
-                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
-                defaultValue={status}
-              >
-                <option value="A">Activated</option>
-                <option value="I">Inactivated</option>
-                <option value="C">Cancelled</option>
-              </select>
-            </div>
-          </div>
-          <div className="text-center">
-            <button
-              type="submit"
-              className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
-            >
-              Add User
-            </button>
-          </div>
-        </form>
-      </Modal>
-
-      <Modal isOpen={isEditOpen} onClose={editClose}>
-        <button onClick={editClose} className="absolute right-1 top-1">
-          <AiOutlineCloseCircle className="w-8 h-8" />
-        </button>
-        <h2 className="text-2xl">Edit Call In Progress</h2>
-        <hr className="my-2" />
-        <form onSubmit={handleUserUpdate}>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <Input
-                label={"Name"}
-                name="name"
-                defaultValue={selectedData ? selectedData.name : ""}
-                type="text"
-                onChange={handleDataChange}
-                placeholder="Enter Name"
-              />
-            </div>
-            <div className="col-span-2">
-              <label> Status </label>
-              <select
-                defaultValue={selectedData?.status}
-                onChange={handleDataChange}
-                name="status"
-                className="w-full bg-white px-4 text-base bg-[#e6e6e6] rounded-[25px] mb-3 border-b-2 mt-1 py-3"
-              >
-                <option value="">Select Status</option>
-                <option value="Activated">Activated</option>
-                <option value="Inactivated">Inactivated</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </div>
-          </div>
-          <div className="text-center">
-            <button
-              type="submit"
-              className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
-            >
-              Edit Call In Progress
-            </button>
-          </div>
-        </form>
-      </Modal>
-      {/* <div className="pr-4">
-        <ul className="flex border-b mt-3">
-          {tabs.length > 0 &&
-            tabs?.map((tab, index) => (
-              <li
-                key={index}
-                className={`${
-                  activeTab === index
-                    ? "bg-gradient-to-r from-[#c850c0] to-[#4158d0] text-white"
-                    : "text-blue-500 hover:bg-blue-100 border-2 border-[#c850c0]"
-                } flex-1 text-center p-4 cursor-pointer  max-w-[200px] relative mx-1 rounded-lg`}
-                onClick={() => setActiveTab(index)}
-              >
-                {data.length == 1 ? (
-                  <></>
-                ) : (
-                  <div className="absolute right-[2px] top-[2px]  z-[999]">
-                    <IoIosCloseCircle
-                      className="w-6 h-6 text-[#c850c0] bg-[#fff] rounded-[50%]"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent the tab click event from firing
-                        handleTabClose(index);
-                      }}
-                    />
-                  </div>
-                )}
-
-                {tab.label}
-              </li>
+      {/* Table to Display Submitted Websites */}
+      {websites.length > 0 ? (
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 p-2">Sr No</th>
+              <th className="border border-gray-300 p-2">Country</th>
+              <th className="border border-gray-300 p-2">URL</th>
+              <th className="border border-gray-300 p-2">Service Provider</th>
+            </tr>
+          </thead>
+          <tbody>
+            {websites.map((website, index) => (
+              <tr key={index} className="text-center">
+                <td className="border border-gray-300 p-2">{index + 1}</td>
+                <td className="border border-gray-300 p-2">{website.country}</td>
+                <td className="border border-gray-300 p-2">
+                  <a
+                    href={website.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    {website.url}
+                  </a>
+                </td>
+                <td className="border border-gray-300 p-2">{website.serviceProvider}</td>
+              </tr>
             ))}
-        </ul>
-      </div>
-
-      <div className="">{tabs[activeTab]?.content}</div> */}
-
-      <div className="px-8 min-h-screen">
-        <div className="grid grid-cols-12 gap-4 ">
-          <div className="col-span-6">
-            <p className="py-4 text-3xl font-semibold">Call In Progress</p>
-          </div>
-          <div className="col-span-6 justify-end flex">
-            <button
-              className="border-b-2 border-black self-center"
-              type="button"
-              onClick={openModal}
-            >
-              + Add Record
-            </button>
-          </div>
-        </div>
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-5"></div>
-          <div className="col-span-4">
-            <Input
-              type="search"
-              placeholder="Search ...."
-              onChange={handleFilter}
-            />
-          </div>
-          <div className="col-span-3 text-end self-center">
-            <button
-              className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 text-white py-2 px-4 rounded-md"
-              onClick={createCSV}
-            >
-              Download CSV
-            </button>
-          </div>
-        </div>
-        <DataTable columns={columns} data={Object.values(data)} pagination />
-      </div>
-    </>
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500 text-center">No websites added yet.</p>
+      )}
+    </div>
   );
-}
+};
 
 export default Dashboard;

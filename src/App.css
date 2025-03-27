@@ -4,3 +4,19 @@
 body {
      font-family: 'Onest', sans-serif;
 }
+.bg-custom-gradient {
+     background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+.btn_submit {
+     width: auto;
+     padding: 10px 30px;
+ }
+ .mt-6.addtional_sec {
+     margin-top: 50px !important;
+ }
+.logo_text {
+     text-align: center;
+     color: #fff;
+     font-size: 30px;
+     font-weight: 700;
+ }

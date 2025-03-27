@@ -10,6 +10,7 @@ import Monitoring from "../Pages/monitoring";
 import Call from "../Pages/call";
 import Parameters from "../Pages/parameters";
 import Dashboard from "../Pages/dashbaord";
+import AddWebsite from "../Pages/addwebsite";
 
 function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
   const [active, setActive] = useState("");
@@ -48,50 +49,11 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       component: <Dashboard />,
     },
     {
-      name: "Administration",
-      items: [
-        {
-          name: "Extensions",
-          url: "/extensions",
-          component: <Extensions />,
-        },
-        {
-          name: "Queues",
-          url: "/Queues",
-          component: <Queues />,
-        },
-        {
-          name: "Routes",
-          url: "/Routes",
-          component: <Routess />,
-        },
-      ],
+      name: "Addwebsite",
+      url: "/Addwebsite",
+      component: <AddWebsite />,
     },
-    {
-      name: "Monitoring",
-      url: "/Monitoring",
-      component: <Monitoring />,
-    },
-    {
-      name: "Reports",
-      items: [
-        {
-          name: "Call Detail",
-          url: "/call",
-          component: <Call />,
-        },
-      ],
-    },
-    {
-      name: "Advanced",
-      items: [
-        {
-          name: "Parameters",
-          url: "/Parameters",
-          component: <Parameters />,
-        },
-      ],
-    },
+   
   ];
 
   // console.log(Lists)
@@ -142,8 +104,10 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
 
   return (
     <div className="h-full">
-      <div className="bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full sidebars">
-        <img src={Logo} className="mx-auto py-4" alt="logo" />
+      <div className="min-h-[100vh] h-full bg-custom-gradient">
+        {/* <img src={Logo} className="mx-auto py-4" alt="logo" /> */}
+        <h2 className="mx-auto py-4 logo_text">Medial Logo</h2>
+      
         <div className="shadow-sm min-h-[93vh] h-full">
           <div className="w-[280px] mx-auto pt-8">
             <ul>

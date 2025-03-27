@@ -10,6 +10,7 @@ import Call from "./Component/Pages/call";
 import Parameters from "./Component/Pages/parameters";
 import { Navigate } from "react-router-dom";
 import Dashboard from "./Component/Pages/dashbaord";
+import AddWebsite from "./Component/Pages/addwebsite";
 
 const errorRoute = () => {
   if (!localStorage.getItem("token")) {
@@ -33,6 +34,7 @@ const routes = [
     element: <Layout />,
     children: [
       { path: "/dashboard", element: <Dashboard /> },
+      { path: "/addwebsite", element: <AddWebsite /> },
       { path: "/extensions", element: <Extensions /> },
       { path: "/Queues", element: <Queues /> },
       { path: "/Routes", element: <Routess /> },

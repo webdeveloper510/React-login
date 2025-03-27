@@ -38,39 +38,7 @@ const Tabs = ({ data, activeTab, setActiveTab, handler }) => {
 
   return (
     <div>
-      <div className="pr-4">
-        <ul className="flex border-b mt-3">
-          {tabs.length > 0 &&
-            tabs?.map((tab, index) => (
-              <li
-                key={index}
-                className={`${
-                  activeTab === index
-                    ? "bg-gradient-to-r from-[#c850c0] to-[#4158d0] text-white"
-                    : "text-blue-500 hover:bg-blue-100 border-2 border-[#c850c0]"
-                } flex-1 text-center p-4 cursor-pointer  max-w-[200px] relative mx-1 rounded-lg`}
-                onClick={() => setActiveTab(index)}
-              >
-                {data.length == 1 ? (
-                  <></>
-                ) : (
-                  <div className="absolute right-[2px] top-[2px]  z-[999]">
-                    <IoIosCloseCircle
-                      className="w-6 h-6 text-[#c850c0] bg-[#fff] rounded-[50%]"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent the tab click event from firing
-                        handleTabClose(index);
-                      }}
-                    />
-                  </div>
-                )}
-
-                {tab.label}
-              </li>
-            ))}
-        </ul>
-      </div>
-
+    
       <div className="relative">{tabs[activeTab]?.content} </div>
     </div>
   );

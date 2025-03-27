@@ -13,37 +13,31 @@ function Login() {
   const [token, setToken] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  // const handleSubmit = async (e) => {
 
-    e.preventDefault();
+  //   e.preventDefault();
 
-    try {
-      const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=apiLogin&username=${username}&password=${password}`;
+  //   try {
+  //     const apiUrl = `http://v01.kerne.org:500/pbx/pbx001/webapi/?module=apiLogin&username=${username}&password=${password}`;
 
-      const response = await axios.get(apiUrl);
-      if (response.data.status == "OK") {
-        toast.success(response.data.message);
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token);
-        setTimeout(() => {
-          navigate("/dashboard", { token: response.data.token });
-        }, 2000);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/dasboard");
-    }
-  }, []);
+  //     const response = await axios.get(apiUrl);
+  //     if (response.data.status == "OK") {
+  //       toast.success(response.data.message);
+  //       setToken(response.data.token);
+  //       localStorage.setItem("token", response.data.token);
+  //       setTimeout(() => {
+  //         navigate("/dashboard", { token: response.data.token });
+  //       }, 2000);
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   return (
-    <div className=" bg-gradient-to-r from-[#c850c0] to-[#4158d0] min-h-[100vh] h-full  pt-12">
+    <div className="min-h-[100vh] h-full  pt-12 bg-custom-gradient">
       <div className="grid grid-cols-12 gap-8 w-[960px] mx-auto bg-[#fff] p-6 rounded-lg">
         <div className="col-span-12 md:col-span-6">
           <img
@@ -57,7 +51,7 @@ function Login() {
             <p className="text-center text-2xl font-semibold my-8">
               Login Form
             </p>
-            <form onSubmit={handleSubmit}>
+            <form >
               <div className="grid grid-cols-1 gap-4">
                 <Input
                   type="text"
@@ -77,21 +71,21 @@ function Login() {
               <div className="text-end">
                 <Link to={"/"}>Forgot Password ? </Link>
               </div>
-              <div className="text-center">
+              <div className="text-center mt-6">
                 <button
                   type="submit"
-                  className="bg-[#57b846] mt-3 text-[#fff] py-3 px-12 text-lg mx-auto rounded-[25px]"
+                  className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 w-full btn_submit"
                 >
                   Sign In
                 </button>
               </div>
             </form>
-            <div className="mt-8 flex">
+            {/* <div className="mt-8 flex">
               <p>Don’t have any account?</p>
               <Link to="/register" className="text-[#57b846] ml-3">
                 Sign Up
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -19,15 +19,15 @@ function Layout() {
     setTabs(value);
   };
 
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!localStorage.getItem("token")) {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <div className="w-full flex">
-      <div className="w-3/12 h-full	bg-gradient-to-r from-[#c850c0] to-[#4158d0] sidebar">
+      <div className="w-2/12 h-full	bg-gradient-to-r from-[#c850c0] to-[#4158d0] sidebar">
         <SideBar
           data={tabs}
           tabs={tabs}
@@ -35,7 +35,7 @@ function Layout() {
           setActiveTab={setCurrentTab}
         />
       </div>
-      <div className="w-9/12 h-full position-relative">
+      <div className="w-10/12 h-full position-relative">
         <Tabs
           handler={(value) => updateTabs(value)}
           activeTab={currentTab}
