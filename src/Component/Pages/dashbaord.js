@@ -1,24 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getWebsites } from "../../Api";
 
 const Dashboard = () => {
-  // Sample data for the table
-  const [websites, setWebsites] = useState([
-    {
-      country: "United States",
-      url: "https://example.com",
-      serviceProvider: "GoDaddy",
-    },
-    {
-      country: "India",
-      url: "https://example.in",
-      serviceProvider: "Hostinger",
-    },
-    {
-      country: "Germany",
-      url: "https://example.de",
-      serviceProvider: "Bluehost",
-    },
-  ]);
+  const [websites, setWebsites] = useState([]);
+
+  useEffect(() => {
+    const fetchWebsites = async () => {
+      const data = await getWebsites();
+      console.log("🚀 ~ fetchWebsites ~ data:", data)
+      if (data && Array.isArray(data)) {
+        setWebsites(data);
+      }
+    };
+    fetchWebsites();
+  }, []);
 
   return (
     <div className="w-10/12 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
@@ -39,7 +34,7 @@ const Dashboard = () => {
             {websites.map((website, index) => (
               <tr key={index} className="text-center">
                 <td className="border border-gray-300 p-2">{index + 1}</td>
-                <td className="border border-gray-300 p-2">{website.country}</td>
+                <td className="border border-gray-300 p-2">{website.country_name}</td>
                 <td className="border border-gray-300 p-2">
                   <a
                     href={website.url}
@@ -50,7 +45,7 @@ const Dashboard = () => {
                     {website.url}
                   </a>
                 </td>
-                <td className="border border-gray-300 p-2">{website.serviceProvider}</td>
+                <td className="border border-gray-300 p-2">{website.finance_name}</td>
               </tr>
             ))}
           </tbody>
