@@ -6,12 +6,20 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchWebsites = async () => {
-      const data = await getWebsites();
-      console.log("🚀 ~ fetchWebsites ~ data:", data)
-      if (data && Array.isArray(data)) {
-        setWebsites(data);
+      try {
+        const response = await getWebsites();
+        console.log("🚀 ~ API Response:", response);
+
+        if (response?.status === "success" && Array.isArray(response.data)) {
+          setWebsites(response.data);
+        } else {
+          console.error("Invalid API response format", response);
+        }
+      } catch (error) {
+        console.error("Error fetching websites:", error);
       }
     };
+
     fetchWebsites();
   }, []);
 
@@ -19,7 +27,6 @@ const Dashboard = () => {
     <div className="w-10/12 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Submitted Websites</h2>
 
-      {/* Table to Display Submitted Websites */}
       {websites.length > 0 ? (
         <table className="w-full border-collapse border border-gray-300">
           <thead>
@@ -28,6 +35,7 @@ const Dashboard = () => {
               <th className="border border-gray-300 p-2">Country</th>
               <th className="border border-gray-300 p-2">URL</th>
               <th className="border border-gray-300 p-2">Service Provider</th>
+              <th className="border border-gray-300 p-2">Custom Data</th>
             </tr>
           </thead>
           <tbody>
@@ -37,15 +45,30 @@ const Dashboard = () => {
                 <td className="border border-gray-300 p-2">{website.country_name}</td>
                 <td className="border border-gray-300 p-2">
                   <a
-                    href={website.url}
+                    href={website.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 underline"
                   >
-                    {website.url}
+                    {website.website_url}
                   </a>
                 </td>
-                <td className="border border-gray-300 p-2">{website.finance_name}</td>
+                <td className="border border-gray-300 p-2">
+                  {website.finance_company_name?.company_name || "N/A"}
+                </td>
+                <td className="border border-gray-300 p-2">
+                  {website.finance_company_name?.custom_data?.length > 0 ? (
+                    <ul className="text-left">
+                      {website.finance_company_name.custom_data.map((item, idx) => (
+                        <li key={idx} className="text-sm">
+                          <strong>{item.key}</strong>: {item.value}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    "No Custom Data"
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

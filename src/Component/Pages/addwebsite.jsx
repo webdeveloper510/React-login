@@ -3,6 +3,7 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { addWebsite } from "../../Api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const countries = [
   "United States", "United Kingdom", "Germany", "France", "India", "Canada", "Australia"
 ];
@@ -10,26 +11,26 @@ const countries = [
 const AddWebsite = () => {
   const [formData, setFormData] = useState({
     url: "",
-    country_name: "", 
+    country_name: "",
     finance_name: "",
-    extra_fields: []
+    extra_fields: [],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
-  
+
     try {
       const response = await addWebsite({
         url: formData.url,
@@ -37,10 +38,10 @@ const AddWebsite = () => {
         finance_name: formData.finance_name,
         extra_fields: formData.extra_fields,
       });
-  
+
       console.log("Website added successfully:", response);
-  
-      if (response.status === 200) {
+
+      if (response.status === 201) {
         toast.success("Website added successfully!");
         setFormData({
           url: "",
@@ -48,40 +49,49 @@ const AddWebsite = () => {
           finance_name: "",
           extra_fields: [],
         });
-      }
+      } 
     } catch (err) {
       console.error("Submission error:", err);
-      setError(err.response?.data?.message || "Failed to add website");
-      toast.error("Failed to add website. Please try again.");
+      
+      if (err.response?.status === 500) {
+        const errorMessage = err.response?.data?.message || "Invalid request. Please check your input.";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } else {
+        setError("Failed to add website. Please try again.");
+        toast.error("Failed to add website. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   const addField = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       extra_fields: [...prev.extra_fields, { label: "", type: "", value: "" }],
     }));
   };
+
   const handleFieldChange = (index, e) => {
     const { name, value } = e.target;
-    setFormData(prev => {
+    setFormData((prev) => {
       const updatedFields = [...prev.extra_fields];
       updatedFields[index] = {
         ...updatedFields[index],
-        [name]: value
+        [name]: value,
       };
       return {
         ...prev,
-        extra_fields: updatedFields
+        extra_fields: updatedFields,
       };
     });
   };
+
   const removeField = (index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      extra_fields: prev.extra_fields.filter((_, i) => i !== index)
+      extra_fields: prev.extra_fields.filter((_, i) => i !== index),
     }));
   };
 
@@ -94,11 +104,10 @@ const AddWebsite = () => {
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
-     
         <div>
           <label className="block text-gray-700">Country:</label>
           <select
-            name="country_name" 
+            name="country_name"
             value={formData.country_name}
             onChange={handleChange}
             required
@@ -112,7 +121,7 @@ const AddWebsite = () => {
             ))}
           </select>
         </div>
-        
+
         {/* URL Input */}
         <div>
           <label className="block text-gray-700">Website URL:</label>
@@ -132,7 +141,7 @@ const AddWebsite = () => {
           <label className="block text-gray-700">Service Provider Name:</label>
           <input
             type="text"
-            name="finance_name" 
+            name="finance_name"
             value={formData.finance_name}
             onChange={handleChange}
             required
@@ -145,9 +154,11 @@ const AddWebsite = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`bg-blue-500 text-white p-2 rounded-md w-full btn_submit ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+          className={`bg-blue-500 text-white p-2 rounded-md w-full btn_submit ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+          }`}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit'}
+          {isSubmitting ? "Submitting..." : "Submit"}
         </button>
 
         {/* Dynamic List Fields */}
