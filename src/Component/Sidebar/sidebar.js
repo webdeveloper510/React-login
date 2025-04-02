@@ -11,6 +11,7 @@ import Call from "../Pages/call";
 import Parameters from "../Pages/parameters";
 import Dashboard from "../Pages/dashbaord";
 import AddWebsite from "../Pages/addwebsite";
+import CountryManagement from "../Pages/countrylist";
 
 function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
   const [active, setActive] = useState("");
@@ -49,11 +50,15 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       component: <Dashboard />,
     },
     {
+      name: "Countrylist",
+      url: "/Countrylist",
+      component: <CountryManagement />,
+    },
+    {
       name: "Addwebsite",
       url: "/Addwebsite",
       component: <AddWebsite />,
     },
-   
   ];
 
   // console.log(Lists)

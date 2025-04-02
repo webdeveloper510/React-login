@@ -11,7 +11,7 @@ import Parameters from "./Component/Pages/parameters";
 import { Navigate } from "react-router-dom";
 import Dashboard from "./Component/Pages/dashbaord";
 import AddWebsite from "./Component/Pages/addwebsite";
-
+import CountryManagement from "./Component/Pages/countrylist";
 const errorRoute = () => {
   if (!localStorage.getItem("token")) {
     return "/login";
@@ -34,6 +34,7 @@ const routes = [
     element: <Layout />,
     children: [
       { path: "/dashboard", element: <Dashboard /> },
+      { path: "/Countrylist", element: <CountryManagement /> },
       { path: "/addwebsite", element: <AddWebsite /> },
       { path: "/extensions", element: <Extensions /> },
       { path: "/Queues", element: <Queues /> },

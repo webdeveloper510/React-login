@@ -9,7 +9,7 @@ export const addWebsite = async (websiteData) => {
       url: websiteData.url,
       finance_name: websiteData.finance_name,
       extra_fields: websiteData.extra_fields.map(field => ({
-        label: field.label,
+        key: field.key,
         type: field.type,
         value: field.value
       }))

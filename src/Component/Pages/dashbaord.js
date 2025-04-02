@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getWebsites } from "../../Api";
+import "../css/dashboard.css";
+
+
 
 const Dashboard = () => {
   const [websites, setWebsites] = useState([]);
@@ -35,8 +38,9 @@ const Dashboard = () => {
               <th className="border border-gray-300 p-2">Country</th>
               <th className="border border-gray-300 p-2">URL</th>
               <th className="border border-gray-300 p-2">Service Provider</th>
-              <th className="border border-gray-300 p-2">Custom Data</th>
+              <th className="border border-gray-300 p-2 custom_dada">Custom Data</th>
             </tr>
+            
           </thead>
           <tbody>
             {websites.map((website, index) => (
@@ -57,6 +61,20 @@ const Dashboard = () => {
                   {website.finance_company_name?.company_name || "N/A"}
                 </td>
                 <td className="border border-gray-300 p-2">
+  {website.finance_company_name?.custom_data?.length > 0 ? (
+    <ul className="custom-data-list">
+      {website.finance_company_name.custom_data.map((item, idx) => (
+        <li key={idx}>
+          <span className="custom-data-key">{item.key}:</span> 
+          <span className="custom-data-value">{item.value}</span>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    "No Custom Data"
+  )}
+</td>
+                {/* <td className="border border-gray-300 p-2">
                   {website.finance_company_name?.custom_data?.length > 0 ? (
                     <ul className="text-left">
                       {website.finance_company_name.custom_data.map((item, idx) => (
@@ -68,7 +86,7 @@ const Dashboard = () => {
                   ) : (
                     "No Custom Data"
                   )}
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
