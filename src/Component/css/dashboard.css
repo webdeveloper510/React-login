@@ -9,11 +9,13 @@
     padding: 5px;
     margin-bottom: 4px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     color: #333;
-    display: flex;
     justify-content: space-between;
     align-items: center;
+}
+ul.custom-data-list li p {
+  text-align: left;
 }
   .custom-data-key {
     font-weight: bold;
