@@ -1,50 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const initialCountries = [
-  "United States",
-  "United Kingdom",
-  "Germany",
-  "France",
-  "India",
-  "Canada",
-  "Australia",
-];
+import { addcountry, getcountry, deleteCountry } from "../../Api";
 
 const CountryManagement = () => {
-  const [countries, setCountries] = useState(initialCountries);
+  const [countries, setCountries] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCountry, setNewCountry] = useState("");
-
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
     setNewCountry("");
   };
 
-  const handleAddCountry = () => {
-    if (newCountry.trim() === "") {
-      toast.error("Country name cannot be empty");
-      return;
+  const handleAddCountry = async () => {
+    try {
+      let payload = { country_name: newCountry }
+      const data = await addcountry(payload)
+      toast.success("Country added successfully!");
+      closeModal();
+      getCountry();
+    }
+    catch (error) {
+      toast.error(error.message);
     }
 
-    if (countries.includes(newCountry)) {
-      toast.error("Country already exists!");
-      return;
-    }
+  };
+  useEffect(() => {
+    getCountry();
+  }, []);
 
-    setCountries([...countries, newCountry]);
-    toast.success("Country added successfully!");
-    closeModal();
+  const getCountry = async () => {
+    try {
+      const response = await getcountry();
+      console.log("🚀 ~ API Response1111:", response.data.data);
+      setCountries(response.data.data);
+    } catch (error) {
+      console.error("Error fetching getcountry:", error);
+    }
   };
 
-  const handleRemoveCountry = (index) => {
-    const updatedCountries = countries.filter((_, i) => i !== index);
-    setCountries(updatedCountries);
-    toast.info("Country removed.");
+  const handleDeleteCountry = async (id) => {
+    try {
+      await deleteCountry(id);
+      toast.success("Country deleted successfully!");
+      setCountries((prev) => prev.filter((country) => country.name !== id));
+      closeModal();
+    } catch (error) {
+      toast.error(error.message || "Failed to delete country.");
+    }
   };
 
   return (
@@ -62,12 +68,12 @@ const CountryManagement = () => {
         </thead>
         <tbody>
           {countries.map((country, index) => (
-            <tr key={index} className="text-center">
+            <tr key={country.id || index} className="text-center">
               <td className="border border-gray-300 p-2">{index + 1}</td>
-              <td className="border border-gray-300 p-2">{country}</td>
+              <td className="border border-gray-300 p-2">{country.name}</td>
               <td className="border border-gray-300 p-2">
                 <button
-                  onClick={() => handleRemoveCountry(index)}
+                  onClick={() => handleDeleteCountry(country.id)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <FaTrash />
@@ -100,6 +106,7 @@ const CountryManagement = () => {
           <h2 className="text-xl font-bold mb-4">Add New Country</h2>
           <input
             type="text"
+            name="country_name"
             value={newCountry}
             onChange={(e) => setNewCountry(e.target.value)}
             className="w-full p-2 border rounded-md mb-4"

@@ -26,7 +26,6 @@ const AddWebsite = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -34,18 +33,36 @@ const AddWebsite = () => {
       [name]: value,
     }));
   };
-
+  const handleFieldChange = (index, e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const updatedFields = [...prev.extra_fields];
+  
+      if (!updatedFields[index]) {
+        updatedFields[index] = {}; 
+      }
+  
+      updatedFields[index] = {
+        ...updatedFields[index],
+        [name]: value,
+      };
+  console.log('updatedFields',updatedFields)
+      return {
+        ...prev,
+        extra_fields: updatedFields,
+      };
+    });
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
+// return false
     try {
       const response = await addWebsite({
-        url: formData.url,
-        country_name: formData.country_name,
-        finance_name: formData.finance_name,
-        extra_fields: formData.extra_fields,
+        ...formData
       });
 
       console.log("Website added successfully:", response);
@@ -71,27 +88,11 @@ const AddWebsite = () => {
   const addField = () => {
     setFormData((prev) => ({
       ...prev,
-      extra_fields: [
-        ...prev.extra_fields,
-        { key: "", type: "", value: "", loan_type: "", amount: "", interest_rate: "" },
-      ],
+      extra_fields: [...prev.extra_fields, { loan_type: "", loan_amount: "", loan_interest: "" }],
     }));
   };
+  
 
-  const handleFieldChange = (index, e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => {
-      const updatedFields = [...prev.extra_fields];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        [name]: value,
-      };
-      return {
-        ...prev,
-        extra_fields: updatedFields,
-      };
-    });
-  };
 
   const removeField = (index) => {
     setFormData((prev) => ({
@@ -156,66 +157,67 @@ const AddWebsite = () => {
         {/* Additional Fields Section */}
         <div className="mt-6 additional_sec">
           <h3 className="text-xl font-semibold mb-2">Additional Fields</h3>
+          {formData.extra_fields.length > 0 &&
+  formData.extra_fields.map((field, index) => (
+    <div key={index} className="border p-4 rounded-md mb-3 bg-gray-50">
+      <div className="grid grid-cols-2 gap-4">
+        {/* Loan Type Dropdown */}
+        <div>
+          <label className="block text-gray-700">Loan Type:</label>
+          <select
+            name="loan_type"
+            value={field.loan_type || ""}
+            onChange={(e) => handleFieldChange(index, e)}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="">Select Loan Type</option>
+            {loanTypes.map((loan, idx) => (
+              <option key={idx} value={loan}>
+                {loan}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {formData.extra_fields.map((field, index) => (
-            <div key={index} className="border p-4 rounded-md mb-3 bg-gray-50">
-              <div className="grid grid-cols-2 gap-4">
-                {/* Loan Type Dropdown */}
-                <div>
-                  <label className="block text-gray-700">Loan Type:</label>
-                  <select
-                    name="loan_type"
-                    value={field.loan_type}
-                    onChange={(e) => handleFieldChange(index, e)}
-                    className="w-full p-2 border rounded-md"
-                  >
-                    <option value="">Select Loan Type</option>
-                    {loanTypes.map((loan, idx) => (
-                      <option key={idx} value={loan}>
-                        {loan}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+        {/* Amount Input */}
+        <div>
+          <label className="block text-gray-700">Amount:</label>
+          <input
+            type="number"
+            name="loan_amount"
+            placeholder="Enter Amount"
+            value={field.loan_amount || ""}
+            onChange={(e) => handleFieldChange(index, e)}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
 
-                {/* Amount Input */}
-                <div>
-                  <label className="block text-gray-700">Amount:</label>
-                  <input
-                    type="number"
-                    name="amount"
-                    placeholder="Enter Amount"
-                    value={field.amount}
-                    onChange={(e) => handleFieldChange(index, e)}
-                    className="w-full p-2 border rounded-md"
-                  />
-                </div>
+        {/* Interest Rate Input */}
+        <div>
+          <label className="block text-gray-700">Interest Rate (%):</label>
+          <input
+            type="number"
+            name="loan_interest"
+            placeholder="Enter Interest Rate"
+            value={field.loan_interest || ""}
+            onChange={(e) => handleFieldChange(index, e)}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+      </div>
 
-                {/* Interest Rate Input */}
-                <div>
-                  <label className="block text-gray-700">Interest Rate (%):</label>
-                  <input
-                    type="number"
-                    name="interest_rate"
-                    placeholder="Enter Interest Rate"
-                    value={field.interest_rate}
-                    onChange={(e) => handleFieldChange(index, e)}
-                    className="w-full p-2 border rounded-md"
-                  />
-                </div>
-              </div>
+      {/* Remove Field Button */}
+      <button
+        type="button"
+        onClick={() => removeField(index)}
+        className="text-red-500 hover:text-red-700 mt-2 flex items-center"
+      >
+        <FaTrash className="mr-2" />
+        Remove Field
+      </button>
+    </div>
+  ))}
 
-              {/* Remove Field Button */}
-              <button
-                type="button"
-                onClick={() => removeField(index)}
-                className="text-red-500 hover:text-red-700 mt-2 flex items-center"
-              >
-                <FaTrash className="mr-2" />
-                Remove Field
-              </button>
-            </div>
-          ))}
 
           {/* Add Field Button */}
           <button
@@ -232,9 +234,8 @@ const AddWebsite = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`bg-blue-500 text-white p-2 rounded-md w-full btn_submit ${
-            isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
-          }`}
+          className={`bg-blue-500 text-white p-2 rounded-md w-full btn_submit ${isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+            }`}
         >
           {isSubmitting ? "Submitting..." : "Submit"}
         </button>
