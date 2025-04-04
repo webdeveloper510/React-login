@@ -46,7 +46,7 @@ const CountryManagement = () => {
     try {
       await deleteCountry(id);
       toast.success("Country deleted successfully!");
-      setCountries((prev) => prev.filter((country) => country.name !== id));
+      setCountries((prev) => prev.filter((country) => country.id !== id));
       closeModal();
     } catch (error) {
       toast.error(error.message || "Failed to delete country.");
