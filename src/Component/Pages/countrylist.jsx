@@ -4,11 +4,14 @@ import Modal from "react-modal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { addcountry, getcountry, deleteCountry } from "../../Api";
+import "../css/dashboard.css";
 
 const CountryManagement = () => {
   const [countries, setCountries] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCountry, setNewCountry] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
@@ -16,33 +19,36 @@ const CountryManagement = () => {
   };
 
   const handleAddCountry = async () => {
+    setLoading(true);
     try {
-      let payload = { country_name: newCountry }
-      const data = await addcountry(payload)
+      let payload = { country_name: newCountry };
+      await addcountry(payload);
       toast.success("Country added successfully!");
       closeModal();
       getCountry();
-    }
-    catch (error) {
+    } catch (error) {
       toast.error(error.message);
     }
-
+    setLoading(false);
   };
+
   useEffect(() => {
     getCountry();
   }, []);
 
   const getCountry = async () => {
+    setLoading(true);
     try {
       const response = await getcountry();
-      console.log("🚀 ~ API Response1111:", response.data.data);
       setCountries(response.data.data);
     } catch (error) {
-      console.error("Error fetching getcountry:", error);
+      console.error("Error fetching countries:", error);
     }
+    setLoading(false);
   };
 
   const handleDeleteCountry = async (id) => {
+    setLoading(true);
     try {
       await deleteCountry(id);
       toast.success("Country deleted successfully!");
@@ -51,13 +57,23 @@ const CountryManagement = () => {
     } catch (error) {
       toast.error(error.message || "Failed to delete country.");
     }
+    setLoading(false);
   };
+  if (loading) {
+    return (
+        <div className="loader-container">
+            <div className="loader"></div>
+            <p>Loading news...</p>
+        </div>
+    );
+}
 
   return (
     <div className="w-10/12 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Country Management</h2>
 
-      {/* Country Table */}
+      {loading && <div className="text-center mb-4">Loading...</div>}
+
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
@@ -75,6 +91,7 @@ const CountryManagement = () => {
                 <button
                   onClick={() => handleDeleteCountry(country.id)}
                   className="text-red-500 hover:text-red-700"
+                  disabled={loading}
                 >
                   <FaTrash />
                 </button>
@@ -84,18 +101,17 @@ const CountryManagement = () => {
         </tbody>
       </table>
 
-      {/* Add Country Button */}
       <div className="flex justify-end mt-4">
         <button
           onClick={openModal}
           className="bg-blue-500 text-white p-2 rounded-md flex items-center space-x-2 hover:bg-blue-600"
+          disabled={loading}
         >
           <FaPlus />
           <span>Add Country</span>
         </button>
       </div>
 
-      {/* Modal for Adding Country */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -122,8 +138,9 @@ const CountryManagement = () => {
             <button
               onClick={handleAddCountry}
               className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600"
+              disabled={loading}
             >
-              Add
+              {loading ? "Adding..." : "Add"}
             </button>
           </div>
         </div>

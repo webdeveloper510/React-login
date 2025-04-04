@@ -4,21 +4,18 @@ import "../css/dashboard.css";
 
 const Dashboard = () => {
   const [websites, setWebsites] = useState([]);
-  console.log("web", websites)
-  useEffect(() => {
+  const [loading, setLoading] = useState(true); // Loader state
 
+  useEffect(() => {
     const fetchWebsites = async () => {
       try {
         const response = await getWebsites();
         console.log("🚀 ~ API Response:", response.data);
-
-        // if (response?.status === "success" && Array.isArray(response.data)) {
         setWebsites(response.data);
-        // } else {
-        //   console.error("Invalid API response format", response);
-        // }
       } catch (error) {
         console.error("Error fetching websites:", error);
+      } finally {
+        setLoading(false); // Stop loading after fetch
       }
     };
 
@@ -29,7 +26,12 @@ const Dashboard = () => {
     <div className="w-10/12 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Submitted Websites</h2>
       <div className="outer_submited">
-        {websites.length > 0 ? (
+        {loading ? (
+          <div className="text-center my-4">
+            <span className="loader"></span> {/* Add your loader CSS or use a spinner */}
+            <p className="text-gray-500">Loading...</p>
+          </div>
+        ) : websites.length > 0 ? (
           <div className="overflow-y-auto overflow-x-hidden max-h-[600px] border border-gray-300 rounded-lg">
             <table className="w-full border-collapse border border-gray-300">
               <thead className="sticky top-0 bg-gray-200">
@@ -64,9 +66,9 @@ const Dashboard = () => {
                         <ul className="custom-data-list">
                           {website?.finance_company_name?.custom_data.map((item, idx) => (
                             <li key={idx}>
-                             <p> <strong>Loan Type:</strong> {item.loan_type},</p>
-                             <p><strong> Loan Amount:</strong> {item.loan_amount},</p>
-                             <p><strong> Interest Rate:</strong> {item.interest_rate}</p>
+                              <p><strong>Loan Type:</strong> {item.loan_type}</p>
+                              <p><strong>Loan Amount:</strong> {item.loan_amount}</p>
+                              <p><strong>Interest Rate:</strong> {item.interest_rate}</p>
                             </li>
                           ))}
                         </ul>
@@ -74,7 +76,6 @@ const Dashboard = () => {
                         "No Custom Data"
                       )}
                     </td>
-
                   </tr>
                 ))}
               </tbody>
@@ -85,7 +86,6 @@ const Dashboard = () => {
         )}
       </div>
     </div>
-
   );
 };
 

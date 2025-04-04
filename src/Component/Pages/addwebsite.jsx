@@ -1,18 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
-import { addWebsite } from "../../Api";
+import { addWebsite, getcountry } from "../../Api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const countries = [
-  "United States",
-  "United Kingdom",
-  "Germany",
-  "France",
-  "India",
-  "Canada",
-  "Australia",
-];
+
 
 const loanTypes = ["Personal Loan", "Home Loan", "Car Loan", "Business Loan", "Education Loan"];
 
@@ -26,6 +18,24 @@ const AddWebsite = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+ const [countries, setCountries] = useState([]);
+
+    useEffect(() => {
+      getCountry();
+    }, []);
+  
+    const getCountry = async () => {
+      try {
+        const response = await getcountry();
+        console.log("🚀 ~ API Response1111:", response.data.data);
+        setCountries(response.data.data);
+      } catch (error) {
+        console.error("Error fetching getcountry:", error);
+      }
+    };
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -37,29 +47,29 @@ const AddWebsite = () => {
     const { name, value } = e.target;
     setFormData((prev) => {
       const updatedFields = [...prev.extra_fields];
-  
+
       if (!updatedFields[index]) {
-        updatedFields[index] = {}; 
+        updatedFields[index] = {};
       }
-  
+
       updatedFields[index] = {
         ...updatedFields[index],
         [name]: value,
       };
-  console.log('updatedFields',updatedFields)
+      console.log('updatedFields', updatedFields)
       return {
         ...prev,
         extra_fields: updatedFields,
       };
     });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
-// return false
+    // return false
     try {
       const response = await addWebsite({
         ...formData
@@ -91,7 +101,7 @@ const AddWebsite = () => {
       extra_fields: [...prev.extra_fields, { loan_type: "", loan_amount: "", loan_interest: "" }],
     }));
   };
-  
+
 
 
   const removeField = (index) => {
@@ -121,8 +131,8 @@ const AddWebsite = () => {
           >
             <option value="">Select Country</option>
             {countries.map((country, index) => (
-              <option key={index} value={country}>
-                {country}
+              <option key={index} value={country.name}>
+                {country.name}
               </option>
             ))}
           </select>
@@ -158,65 +168,65 @@ const AddWebsite = () => {
         <div className="mt-6 additional_sec">
           <h3 className="text-xl font-semibold mb-2">Additional Fields</h3>
           {formData.extra_fields.length > 0 &&
-  formData.extra_fields.map((field, index) => (
-    <div key={index} className="border p-4 rounded-md mb-3 bg-gray-50">
-      <div className="grid grid-cols-2 gap-4">
-        {/* Loan Type Dropdown */}
-        <div>
-          <label className="block text-gray-700">Loan Type:</label>
-          <select
-            name="loan_type"
-            value={field.loan_type || ""}
-            onChange={(e) => handleFieldChange(index, e)}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="">Select Loan Type</option>
-            {loanTypes.map((loan, idx) => (
-              <option key={idx} value={loan}>
-                {loan}
-              </option>
+            formData.extra_fields.map((field, index) => (
+              <div key={index} className="border p-4 rounded-md mb-3 bg-gray-50">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Loan Type Dropdown */}
+                  <div>
+                    <label className="block text-gray-700">Loan Type:</label>
+                    <select
+                      name="loan_type"
+                      value={field.loan_type || ""}
+                      onChange={(e) => handleFieldChange(index, e)}
+                      className="w-full p-2 border rounded-md"
+                    >
+                      <option value="">Select Loan Type</option>
+                      {loanTypes.map((loan, idx) => (
+                        <option key={idx} value={loan}>
+                          {loan}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Amount Input */}
+                  <div>
+                    <label className="block text-gray-700">Amount:</label>
+                    <input
+                      type="number"
+                      name="loan_amount"
+                      placeholder="Enter Amount"
+                      value={field.loan_amount || ""}
+                      onChange={(e) => handleFieldChange(index, e)}
+                      className="w-full p-2 border rounded-md"
+                    />
+                  </div>
+
+                  {/* Interest Rate Input */}
+                  <div>
+                    <label className="block text-gray-700">Interest Rate (%):</label>
+                    <input
+                      type="number"
+                      name="loan_interest"
+                      placeholder="Enter Interest Rate"
+                      value={field.loan_interest || ""}
+                      onChange={(e) => handleFieldChange(index, e)}
+                      className="w-full p-2 border rounded-md"
+                    />
+                  </div>
+                </div>
+
+                {/* Remove Field Button */}
+                <button
+                  type="button"
+                  onClick={() => removeField(index)}
+                  className="text-red-500 hover:text-red-700 mt-2 flex items-center"
+                >
+                  <FaTrash className="mr-2" />
+                  Remove Field
+                </button>
+              </div>
             ))}
-          </select>
-        </div>
-
-        {/* Amount Input */}
-        <div>
-          <label className="block text-gray-700">Amount:</label>
-          <input
-            type="number"
-            name="loan_amount"
-            placeholder="Enter Amount"
-            value={field.loan_amount || ""}
-            onChange={(e) => handleFieldChange(index, e)}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-
-        {/* Interest Rate Input */}
-        <div>
-          <label className="block text-gray-700">Interest Rate (%):</label>
-          <input
-            type="number"
-            name="loan_interest"
-            placeholder="Enter Interest Rate"
-            value={field.loan_interest || ""}
-            onChange={(e) => handleFieldChange(index, e)}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-      </div>
-
-      {/* Remove Field Button */}
-      <button
-        type="button"
-        onClick={() => removeField(index)}
-        className="text-red-500 hover:text-red-700 mt-2 flex items-center"
-      >
-        <FaTrash className="mr-2" />
-        Remove Field
-      </button>
-    </div>
-  ))}
 
 
           {/* Add Field Button */}
