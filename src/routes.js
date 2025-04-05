@@ -1,32 +1,24 @@
 import React from "react";
-import Login from "./Component/Login/login";
-import Register from "./Component/Register/register";
-import Layout from "./Component/Layout/Layout";
-import Extensions from "./Component/Pages/extensions";
-import Queues from "./Component/Pages/queues";
-import Routess from "./Component/Pages/routess";
-import Monitoring from "./Component/Pages/monitoring";
-import Call from "./Component/Pages/call";
-import Parameters from "./Component/Pages/parameters";
 import { Navigate } from "react-router-dom";
+
+import Login from "./Component/Login/login";
+import Layout from "./Component/Layout/Layout";
 import Dashboard from "./Component/Pages/dashbaord";
-import AddWebsite from "./Component/Pages/addwebsite";
-import CountryManagement from "./Component/Pages/countrylist";
-const errorRoute = () => {
-  if (!localStorage.getItem("token")) {
-    return "/login";
-  } else {
-    return "/dashboard";
-  }
-};
+import AddMedia from "./Component/Pages/addmedia";
+
+// import Register from "./Component/Register/register";
+// import Extensions from "./Component/Pages/extensions";
+// import Queues from "./Component/Pages/queues";
+// import Routess from "./Component/Pages/routess";
+// import Monitoring from "./Component/Pages/monitoring";
+// import Call from "./Component/Pages/call";
+// import Parameters from "./Component/Pages/parameters";
 
 const routes = [
   {
     path: "/",
     children: [
-      { path: "/login", index: true, element: <Login /> },
-      { path: "/register", element: <Register /> },
-      { path: "*", element: <Navigate to={errorRoute()} /> },
+      { path: "/", index: true, element: <Login /> },
     ],
   },
   {
@@ -34,14 +26,13 @@ const routes = [
     element: <Layout />,
     children: [
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/Countrylist", element: <CountryManagement /> },
-      { path: "/addwebsite", element: <AddWebsite /> },
-      { path: "/extensions", element: <Extensions /> },
-      { path: "/Queues", element: <Queues /> },
-      { path: "/Routes", element: <Routess /> },
-      { path: "/Monitoring", element: <Monitoring /> },
-      { path: "/call", element: <Call /> },
-      { path: "/Parameters", element: <Parameters /> },
+      { path: "/addmedia", element: <AddMedia /> },
+      // { path: "/extensions", element: <Extensions /> },
+      // { path: "/Queues", element: <Queues /> },
+      // { path: "/Routes", element: <Routess /> },
+      // { path: "/Monitoring", element: <Monitoring /> },
+      // { path: "/call", element: <Call /> },
+      // { path: "/Parameters", element: <Parameters /> },
     ],
   },
 ];

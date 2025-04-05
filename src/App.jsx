@@ -6,11 +6,11 @@ import { Outlet, useNavigate } from "react-router";
 function App() {
   const routing = useRoutes(routes);
   const navigate = useNavigate();
-  useEffect(() => {
+  // useEffect(() => {
    
-      navigate("/dashboard")
+  //     navigate("/dashboard")
  
-  }, []);
+  // }, []);
   return (
     <>
       <div>

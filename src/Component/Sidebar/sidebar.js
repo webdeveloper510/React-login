@@ -2,16 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Logo from "../../assets/image/logo.png";
-import Extensions from "../Pages/extensions";
-import Queues from "../Pages/queues";
-import Routess from "../Pages/routess";
-import Monitoring from "../Pages/monitoring";
-import Call from "../Pages/call";
-import Parameters from "../Pages/parameters";
+import Logo from "../../assets/image/better_logo.png";
 import Dashboard from "../Pages/dashbaord";
-import AddWebsite from "../Pages/addwebsite";
-import CountryManagement from "../Pages/countrylist";
+import AddMedia from "../Pages/addmedia";
+
 
 function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
   const [active, setActive] = useState("");
@@ -50,15 +44,15 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
       component: <Dashboard />,
     },
     {
-      name: "Countrylist",
-      url: "/Countrylist",
-      component: <CountryManagement />,
+      name: "Addmedia",
+      url: "/addmedia",
+      component: <AddMedia />,
     },
-    {
-      name: "Addwebsite",
-      url: "/Addwebsite",
-      component: <AddWebsite />,
-    },
+    // {
+    //   name: "Addwebsite",
+    //   url: "/Addwebsite",
+    //   component: <AddWebsite />,
+    // },
   ];
 
   // console.log(Lists)
@@ -110,8 +104,8 @@ function SideBar({ handler, data, tabs, setTabs, setActiveTab }) {
   return (
     <div className="h-full">
       <div className="min-h-[100vh] h-full bg-custom-gradient">
-        {/* <img src={Logo} className="mx-auto py-4" alt="logo" /> */}
-        <h2 className="mx-auto py-4 logo_text">Medical Logo</h2>
+        <img src={Logo} className="mx-auto py-4" alt="logo" />
+        {/* <h2 className="mx-auto py-4 logo_text">Medical Logo</h2> */}
       
         <div className="shadow-sm min-h-[93vh] h-full">
           <div className="w-[280px] mx-auto pt-8">

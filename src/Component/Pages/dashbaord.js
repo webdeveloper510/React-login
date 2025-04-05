@@ -1,89 +1,81 @@
-import React, { useState, useEffect } from "react";
-import { getWebsites } from "../../Api";
+import React from "react";
 import "../css/dashboard.css";
 
 const Dashboard = () => {
-  const [websites, setWebsites] = useState([]);
-  const [loading, setLoading] = useState(true); // Loader state
-
-  useEffect(() => {
-    const fetchWebsites = async () => {
-      try {
-        const response = await getWebsites();
-        console.log("🚀 ~ API Response:", response.data);
-        setWebsites(response.data);
-      } catch (error) {
-        console.error("Error fetching websites:", error);
-      } finally {
-        setLoading(false); // Stop loading after fetch
-      }
-    };
-
-    fetchWebsites();
-  }, []);
+  const dummyData = [
+    {
+      title: "Modern Wedding Venue",
+      description: "A beautiful venue for weddings and receptions.",
+      price: "$1,200",
+      external_url: "https://example.com/venue/1",
+      media: "https://via.placeholder.com/100"
+    },
+    {
+      title: "Rustic Farmhouse",
+      description: "Perfect for countryside weddings.",
+      price: null, // Optional
+      external_url: null, // Optional
+      media: "https://via.placeholder.com/100"
+    },
+    {
+      title: "Urban Rooftop",
+      description: "A stylish rooftop venue in the city.",
+      price: "$1,800",
+      external_url: "https://example.com/venue/3",
+      media: "https://via.placeholder.com/100"
+    }
+  ];
 
   return (
     <div className="w-10/12 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Submitted Websites</h2>
-      <div className="outer_submited">
-        {loading ? (
-          <div className="text-center my-4">
-            <span className="loader"></span> {/* Add your loader CSS or use a spinner */}
-            <p className="text-gray-500">Loading...</p>
-          </div>
-        ) : websites.length > 0 ? (
-          <div className="overflow-y-auto overflow-x-hidden max-h-[600px] border border-gray-300 rounded-lg">
-            <table className="w-full border-collapse border border-gray-300">
-              <thead className="sticky top-0 bg-gray-200">
-                <tr>
-                  <th className="border border-gray-300 p-2">Sr No</th>
-                  <th className="border border-gray-300 p-2">Country</th>
-                  <th className="border border-gray-300 p-2 url_th">URL</th>
-                  <th className="border border-gray-300 p-2">Service Provider</th>
-                  <th className="border border-gray-300 p-2 custom_dada">Custom Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {websites.map((website, index) => (
-                  <tr key={index} className="text-center">
-                    <td className="border border-gray-300 p-2">{index + 1}</td>
-                    <td className="border border-gray-300 p-2">{website.country_name}</td>
-                    <td className="border border-gray-300 p-2">
-                      <a
-                        href={website.website_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 underline"
-                      >
-                        {website.website_url}
-                      </a>
-                    </td>
-                    <td className="border border-gray-300 p-2">
-                      {website.finance_company_name?.company_name || "N/A"}
-                    </td>
-                    <td className="border border-gray-300 p-2">
-                      {Array.isArray(website?.finance_company_name.custom_data) && website?.finance_company_name.custom_data.length > 0 ? (
-                        <ul className="custom-data-list">
-                          {website?.finance_company_name?.custom_data.map((item, idx) => (
-                            <li key={idx}>
-                              <p><strong>Loan Type:</strong> {item.loan_type}</p>
-                              <p><strong>Loan Amount:</strong> {item.loan_amount}</p>
-                              <p><strong>Interest Rate:</strong> {item.interest_rate}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        "No Custom Data"
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center">No websites added yet.</p>
-        )}
+      <h2 className="text-2xl font-bold mb-4">Added Records</h2>
+
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-300">
+          <thead className="bg-gray-200 sticky top-0">
+            <tr>
+              <th className="border border-gray-300 p-2">Sr No</th>
+              <th className="border border-gray-300 p-2">Title</th>
+              <th className="border border-gray-300 p-2">Description</th>
+              <th className="border border-gray-300 p-2">Price</th>
+              <th className="border border-gray-300 p-2">External URL</th>
+              <th className="border border-gray-300 p-2">Media</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dummyData.map((venue, index) => (
+              <tr key={index} className="text-center">
+                <td className="border border-gray-300 p-2">{index + 1}</td>
+                <td className="border border-gray-300 p-2">{venue.title}</td>
+                <td className="border border-gray-300 p-2">{venue.description}</td>
+                <td className="border border-gray-300 p-2">
+                  {venue.price || "N/A"}
+                </td>
+                <td className="border border-gray-300 p-2">
+                  {venue.external_url ? (
+                    <a
+                      href={venue.external_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      Visit
+                    </a>
+                  ) : (
+                    "N/A"
+                  )}
+                </td>
+                <td className="border border-gray-300 p-2">
+                  {venue.media ? (
+                    <img src={venue.media} alt="Media" className="w-20 h-auto mx-auto" />
+                  ) : (
+                    "No Media"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

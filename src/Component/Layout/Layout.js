@@ -7,7 +7,7 @@ import Dashboard from "../Pages/dashbaord";
 function Layout() {
   const [tabs, setTabs] = useState([
     {
-      label: "Home",
+      label: "Dashboard",
       content: <Dashboard />,
       url: "/dashboard",
     },
